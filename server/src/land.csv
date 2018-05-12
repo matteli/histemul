@@ -1,0 +1,7 @@
+name;color;walkable
+prairie;light green;1.0
+forest;green;0.8
+mountains;brown light;0.4
+ocean;blue;0.0
+marsh;water green;0.7
+TI;black;0.0

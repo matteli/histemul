@@ -1,0 +1,178 @@
+id_map;active;name;domain_of;land;culture;city_x;city_y;army_x;army_y;adjacency;sea_adjacency;manpower;population;size;defence;siege;morale;controller;war_siege
+0;True;PTI;null;TI;null;-1;-1;-1;-1;[];null;0;0;0;0;0;0;null;null
+1;True;Berquinais;Earl of Berquinais;prairie;France;550;1099;590;1139;[90,13,14,39];null;1000;5000;100;100;0;100;1;null
+2;False;Saguenis;Earl of Saguenis;prairie;France;575;711;615;751;[10,42,48,53,24,95];null;1000;5000;100;100;0;100;null;null
+3;False;Bata;Earl of Bata;mountains;Italia;1749;992;1789;1032;[98,140,47,150,151,88,58,28];null;1000;5000;100;100;0;100;null;null
+4;False;Saintguene;Earl of Saintguene;prairie;France;629;1475;669;1515;[39,168,40,7,46,114,51];null;1000;5000;100;100;0;100;null;null
+5;False;Verainis;Earl of Verainis;prairie;France;840;925;880;965;[34,9,42,41,14,60];null;1000;5000;100;100;0;100;null;null
+6;False;Anpompommen;Earl of Anpompommen;prairie;Deutschland;3111;480;3151;520;[128,17,19,86,22];null;1000;5000;100;100;0;100;null;null
+7;False;Normois;Earl of Normois;prairie;France;870;1565;910;1605;[4,40,80,144,114];null;1000;5000;100;100;0;100;null;null
+8;False;Surshire;Earl of Surshire;mountains;England;2100;1891;2140;1931;[32,33,43,143,154];null;1000;5000;100;100;0;100;null;null
+9;False;Nitonnais;Earl of Nitonnais;prairie;France;832;779;872;819;[5,71,42,12,48,57,60];null;1000;5000;100;100;0;100;null;null
+10;False;Aldie;Earl of Aldie;prairie;France;454;608;494;648;[2,69,52,53,24,92];null;1000;5000;100;100;0;100;null;null
+11;False;Aupatou;Earl of Aupatou;prairie;France;390;1251;430;1291;[39,46,54,90,155];null;1000;5000;100;100;0;100;null;null
+12;False;Sasache;Earl of Sasache;forest;France;978;637;1018;677;[67,71,9,173,57];null;1000;5000;100;100;0;100;null;null
+13;False;Chamraidie;Earl of Chamraidie;prairie;France;546;955;586;995;[1,42,14,50,90,95];null;1000;5000;100;100;0;100;null;null
+14;True;Orvence;Earl of Orvence;prairie;France;700;1033;740;1073;[1,34,5,39,42,13,15];null;1000;5000;100;100;0;100;2;null
+15;False;Marche;Earl of Marche;prairie;France;763;1245;803;1285;[34,39,40,74,14];null;1000;5000;100;100;0;100;null;null
+16;False;Bresachderberg;Earl of Bresachderberg;prairie;Deutschland;2480;53;2520;93;[38,44,56,127,93,63];null;1000;5000;100;100;0;100;null;null
+17;False;Niemern;Earl of Niemern;mountains;Deutschland;2947;581;2987;621;[128,6,105,112,19];null;1000;5000;100;100;0;100;null;null
+18;False;Hundlebersex;Earl of Hundlebersex;prairie;England;2530;1872;2570;1912;[101,83,148,153,59];null;1000;5000;100;100;0;100;null;null
+19;False;Sachderpomyern;Earl of Sachderpomyern;forest;Deutschland;2930;418;2970;458;[128,6,105,17,82,86];null;1000;5000;100;100;0;100;null;null
+20;False;Rela;Earl of Rela;prairie;Italia;1690;313;1730;353;[121,169,37];null;1000;5000;100;100;0;100;null;null
+21;False;Orléaquidoc;Earl of Orléaquidoc;prairie;France;1066;1163;1106;1203;[41,74,138,144,49,91];null;1000;5000;100;100;0;100;null;null
+22;False;Saarmen;Earl of Saarmen;marsh;Deutschland;3119;264;3159;304;[128,6,141,86,87];null;1000;5000;100;100;0;100;null;null
+23;False;Kehamwall;Earl of Kehamwall;prairie;England;2224;1726;2264;1766;[32,101,43,122,59];null;1000;5000;100;100;0;100;null;null
+24;False;Bourry;Earl of Bourry;prairie;France;367;725;407;765;[129,2,164,69,10,175,50,95];null;1000;5000;100;100;0;100;null;null
+25;False;Schleslenlensen;Earl of Schleslenlensen;prairie;Deutschland;2697;324;2737;364;[56,106,82,38];null;1000;5000;100;100;0;100;null;null
+26;False;Schlesrinmern;Earl of Schlesrinmern;prairie;Deutschland;1875;12;1915;52;[176,145,75,61];null;1000;5000;100;100;0;100;null;null
+27;False;Totoro;Earl of Totoro;prairie;Italia;1660;800;1700;840;[130,70,45,88,28,159];null;1000;5000;100;100;0;100;null;null
+28;False;Cucatanbo;Earl of Cucatanbo;prairie;Italia;1630;916;1670;956;[130,98,36,3,150,88,27];null;1000;5000;100;100;0;100;null;null
+29;False;Saintnis;Earl of Saintnis;prairie;France;587;346;627;386;[125];null;1000;5000;100;100;0;100;null;null
+30;False;Thüden;Earl of Thüden;prairie;Deutschland;2991;76;3031;116;[141,77,86,87,89,31];null;1000;5000;100;100;0;100;null;null
+31;False;Nordrinlin;Earl of Nordrinlin;prairie;Deutschland;2843;144;2883;184;[38,77,82,86,30];null;1000;5000;100;100;0;100;null;null
+32;False;Essterland;Earl of Essterland;mountains;England;2098;1721;2138;1761;[33,8,43,23,122];null;1000;5000;100;100;0;100;null;null
+33;False;Cumwall;Earl of Cumwall;prairie;England;1896;1762;1936;1802;[32,8,78,143,120,122];null;1000;5000;100;100;0;100;null;null
+34;False;Piry;Earl of Piry;prairie;France;815;1046;855;1086;[5,41,74,14,15];null;1000;5000;100;100;0;100;null;null
+35;False;Durtinghamland;Earl of Durtinghamland;forest;England;1956;1610;1996;1650;[120,122];null;1000;5000;100;100;0;100;null;null
+36;False;Porricenna;Earl of Porricenna;prairie;Italia;1489;1066;1529;1106;[130,28,150];null;1000;5000;100;100;0;100;null;null
+37;False;Reventia;Earl of Reventia;prairie;Italia;1603;434;1643;474;[169,45,79,20,121,159];null;1000;5000;100;100;0;100;null;null
+38;False;Rheinsachpommern;Earl of Rheinsachpommern;prairie;Deutschland;2673;138;2713;178;[77,16,82,56,25,31,63];null;1000;5000;100;100;0;100;null;null
+39;False;Bourquige;Earl of Bourquige;prairie;France;606;1265;646;1305;[1,4,40,11,46,14,15,90];null;1000;5000;100;100;0;100;3;null
+40;False;Lybonné;Earl of Lybonné;prairie;France;768;1417;808;1457;[4,7,39,74,15,80];null;1000;5000;100;100;0;100;null;null
+41;False;Toutaine;Earl of Toutaine;prairie;France;949;1062;989;1102;[34,5,74,21,91,60];null;1000;5000;100;100;0;100;null;null
+42;False;Rouche;Earl of Rouche;prairie;France;678;835;718;875;[2,5,9,13,14,48,95];null;1000;5000;100;100;0;100;null;null
+43;False;Hertfolk;Earl of Hertfolk;prairie;England;2225;1872;2265;1912;[32,8,23,153,154,59];null;1000;5000;100;100;0;100;null;null
+44;False;Hamsachberg;Earl of Hamsachberg;prairie;Deutschland;2296;40;2336;80;[16,66,127];null;1000;5000;100;100;0;100;null;null
+45;False;Mova;Earl of Mova;prairie;Italia;1596;586;1636;626;[37,70,79,27,159];null;1000;5000;100;100;0;100;null;null
+46;False;Marsaquiné;Earl of Marsaquiné;mountains;France;515;1454;555;1494;[4,39,168,11,54,155];null;1000;5000;100;100;0;100;null;null
+47;False;Porti;Earl of Porti;prairie;Italia;1778;1151;1818;1191;[3,151];null;1000;5000;100;100;0;100;null;null
+48;False;Auce;Earl of Auce;prairie;France;704;616;744;656;[2,9,42,53,57,62];null;1000;5000;100;100;0;100;null;null
+49;False;Rouvoie;Earl of Rouvoie;prairie;France;1039;1294;1079;1334;[74,80,81,144,21];null;1000;5000;100;100;0;100;null;null
+50;False;Andie;Earl of Andie;prairie;France;432;937;472;977;[164,13,24,90,95];null;1000;5000;100;100;0;100;null;null
+51;False;Chamjou;Earl of Chamjou;marsh;France;548;1624;588;1664;[168,114,4];null;1000;5000;100;100;0;100;null;null
+52;False;Bourléaphigne;Earl of Bourléaphigne;forest;France;505;489;545;529;[10,175,53,92,125];null;1000;5000;100;100;0;100;null;null
+53;False;Vetaivernais;Earl of Vetaivernais;prairie;France;625;489;665;529;[96,2,10,48,52,152,125,62];null;1000;5000;100;100;0;100;null;null
+54;False;Algory;Earl of Algory;prairie;France;375;1439;415;1479;[11,155,100,46];null;1000;5000;100;100;0;100;null;null
+55;False;Sufland;Earl of Sufland;prairie;England;2763;1860;2803;1900;[136];null;1000;5000;100;100;0;100;null;null
+56;False;Würtsen;Earl of Würtsen;prairie;Deutschland;2559;268;2599;308;[38,106,16,25,93];null;1000;5000;100;100;0;100;null;null
+57;False;Norléatou;Earl of Norléatou;prairie;France;822;580;862;620;[67,9,12,48,62];null;1000;5000;100;100;0;100;null;null
+58;False;Vazapeta;Earl of Vazapeta;prairie;Italia;1652;1209;1692;1249;[162,98,3,150];null;1000;5000;100;100;0;100;null;null
+59;False;Nottingfolk;Earl of Nottingfolk;mountains;England;2350;1794;2390;1834;[101,43,18,23,153];null;1000;5000;100;100;0;100;null;null
+60;False;Bourléatondie;Earl of Bourléatondie;forest;France;957;903;997;943;[99,5,71,9,41,91];null;1000;5000;100;100;0;100;null;null
+61;False;Saardenlenmern;Earl of Saardenlenmern;prairie;Deutschland;2010;71;2050;111;[145,26,66];null;1000;5000;100;100;0;100;null;null
+62;False;Rouphiquivoie;Earl of Rouphiquivoie;prairie;France;814;467;854;507;[67,48,53,152,57];null;1000;5000;100;100;0;100;null;null
+63;False;Hespomderlen;Earl of Hespomderlen;prairie;Deutschland;2595;22;2635;62;[16,77,38];null;1000;5000;100;100;0;100;null;null
+64;False;Schlespomtemsen;Earl of Schlespomtemsen;prairie;Deutschland;2867;786;2907;826;[112];null;1000;5000;100;100;0;100;null;null
+65;False;Pinais;Earl of Pinais;prairie;France;1127;363;1167;403;[152,117,67,173];null;1000;5000;100;100;0;100;null;null
+66;False;Berpomsen;Earl of Berpomsen;prairie;Deutschland;2143;100;2183;140;[145,44,61,127];null;1000;5000;100;100;0;100;null;null
+67;False;Auvernais;Earl of Auvernais;marsh;France;974;416;1014;456;[65,12,173,152,57,62];null;1000;5000;100;100;0;100;null;null
+68;False;Naserna;Earl of Naserna;prairie;Italia;1472;460;1512;500;[117,159];null;1000;5000;100;100;0;100;null;null
+69;False;Dauléagonis;Earl of Dauléagonis;prairie;France;312;573;352;613;[24,10,92,175];null;1000;5000;100;100;0;100;null;null
+70;False;Mati;Earl of Mati;prairie;Italia;1787;702;1827;742;[169,140,45,79,88,27];null;1000;5000;100;100;0;100;null;null
+71;False;Brebontonge;Earl of Brebontonge;prairie;France;1042;761;1082;801;[99,9,12,173,60];null;1000;5000;100;100;0;100;null;null
+72;False;Hampomyern;Earl of Hampomyern;prairie;Deutschland;2934;1052;2974;1092;[132,166,112,113,119];null;1000;5000;100;100;0;100;null;null
+73;False;Niesachden;Earl of Niesachden;marsh;Deutschland;3004;710;3044;750;[112];null;1000;5000;100;100;0;100;null;null
+74;False;Lanry;Earl of Lanry;prairie;France;912;1279;952;1319;[34,40,41,15,80,49,21];null;1000;5000;100;100;0;100;null;null
+75;False;Schlespommen;Earl of Schlespommen;prairie;Deutschland;1749;7;1789;47;[176,97,26];null;1000;5000;100;100;0;100;null;null
+76;False;Progouphitou;Earl of Progouphitou;forest;France;1231;595;1271;635;[117,173];null;1000;5000;100;100;0;100;null;null
+77;False;Ansen;Earl of Ansen;prairie;Deutschland;2839;7;2879;47;[31,30,38,63];null;1000;5000;100;100;0;100;null;null
+78;False;Bedthumwall;Earl of Bedthumwall;mountains;England;1777;1772;1817;1812;[120,33,143];null;1000;5000;100;100;0;100;null;null
+79;False;Bobo;Earl of Bobo;prairie;Italia;1734;568;1774;608;[169,37,45,70];null;1000;5000;100;100;0;100;null;null
+80;False;Marnais;Earl of Marnais;prairie;France;996;1446;1036;1486;[7,40,74,144,49];null;1000;5000;100;100;0;100;null;null
+81;False;Poigne;Earl of Poigne;prairie;France;1200;1441;1240;1481;[144,49,149];null;1000;5000;100;100;0;100;null;null
+82;False;Westderburg;Earl of Westderburg;prairie;Deutschland;2811;308;2851;348;[38,105,106,19,86,25,31];null;1000;5000;100;100;0;100;null;null
+83;False;Worcewall;Earl of Worcewall;prairie;England;2643;1807;2683;1847;[18,148,101];null;1000;5000;100;100;0;100;null;null
+84;False;Rheinberg;Earl of Rheinberg;prairie;Deutschland;2835;651;2875;691;[112,105];null;1000;5000;100;100;0;100;null;null
+85;False;Viva;Earl of Viva;prairie;Italia;1397;330;1437;370;[121,117];null;1000;5000;100;100;0;100;null;null
+86;False;Vorpomderland;Earl of Vorpomderland;prairie;Deutschland;2978;286;3018;326;[128,6,141,82,19,22,30,31];null;1000;5000;100;100;0;100;null;null
+87;False;Saarlenland;Earl of Saarlenland;prairie;Deutschland;3120;122;3160;162;[89,141,30,22];null;1000;5000;100;100;0;100;null;null
+88;False;Pesmigna;Earl of Pesmigna;prairie;Italia;1775;848;1815;888;[3,70,140,27,28];null;1000;5000;100;100;0;100;null;null
+89;False;Brelenlessen;Earl of Brelenlessen;prairie;Deutschland;3123;2;3163;42;[30,87];null;1000;5000;100;100;0;100;null;null
+90;False;Daurailéajou;Earl of Daurailéajou;prairie;France;438;1108;478;1148;[1,164,39,11,13,50,155];null;1000;5000;100;100;0;100;null;null
+91;False;Lyraigovoie;Earl of Lyraigovoie;mountains;France;1103;994;1143;1034;[99,41,138,21,60];null;1000;5000;100;100;0;100;null;null
+92;False;Bourverpache;Earl of Bourverpache;prairie;France;351;448;391;488;[10,52,69,175];null;1000;5000;100;100;0;100;null;null
+93;False;Thüsachleslen;Earl of Thüsachleslen;marsh;Deutschland;2435;205;2475;245;[16,106,56,127];null;1000;5000;100;100;0;100;null;null
+94;False;Napotiza;Earl of Napotiza;prairie;Italia;1584;158;1624;198;[121];null;1000;5000;100;100;0;100;null;null
+95;False;Auléanais;Earl of Auléanais;prairie;France;504;823;544;863;[2,42,13,50,24];null;1000;5000;100;100;0;100;null;null
+96;False;Bourraimance;Earl of Bourraimance;mountains;France;754;350;794;390;[152,53,125];null;1000;5000;100;100;0;100;null;null
+97;False;Nielesberg;Earl of Nielesberg;prairie;Deutschland;1622;15;1662;55;[176,75,167];null;1000;5000;100;100;0;100;null;null
+98;False;Bobasma;Earl of Bobasma;prairie;Italia;1630;1031;1670;1071;[58,3,28,150];null;1000;5000;100;100;0;100;null;null
+99;False;Ocean99;null;ocean;null;-1;-1;1127;838;[130,71,138,173,117,91,60];null;0;0;0;0;0;0;null;null
+100;False;Ocean100;null;ocean;null;-1;-1;324;1648;[168,139,54,155,156];null;0;0;0;0;0;0;null;null
+101;False;Ocean101;null;ocean;null;-1;-1;2354;1724;[102,135,18,83,116,148,23,122,59];null;0;0;0;0;0;0;null;null
+102;False;Ocean102;null;ocean;null;-1;-1;2754;1622;[101,135,136,104,170,148];null;0;0;0;0;0;0;null;null
+103;False;Ocean103;null;ocean;null;-1;-1;2396;1143;[133,135,113,146,116,119];null;0;0;0;0;0;0;null;null
+104;False;Ocean104;null;ocean;null;-1;-1;3029;1427;[132,102,136,170,119];null;0;0;0;0;0;0;null;null
+105;False;Ocean105;null;ocean;null;-1;-1;2867;421;[128,106,112,17,82,19,84,118];null;0;0;0;0;0;0;null;null
+106;False;Ocean106;null;ocean;null;-1;-1;2648;389;[105,82,118,56,25,123,93,127];null;0;0;0;0;0;0;null;null
+107;False;Ocean107;null;ocean;null;-1;-1;1164;107;[152,172,117,167];null;0;0;0;0;0;0;null;null
+108;False;Ocean108;null;ocean;null;-1;-1;818;1934;[161,137,114,171];null;0;0;0;0;0;0;null;null
+109;False;Ocean109;null;ocean;null;-1;-1;1509;1534;[162,131,165,137,149,120];null;0;0;0;0;0;0;null;null
+110;False;Ocean110;null;ocean;null;-1;-1;731;71;[152,172,125,111];null;0;0;0;0;0;0;null;null
+111;False;Ocean111;null;ocean;null;-1;-1;328;62;[126,110,125,134];null;0;0;0;0;0;0;null;null
+112;False;Ocean112;null;ocean;null;-1;-1;2902;794;[64,128,166,72,105,73,113,17,84,118,119];null;0;0;0;0;0;0;null;null
+113;False;Ocean113;null;ocean;null;-1;-1;2672;952;[133,103,72,112,118,119];null;0;0;0;0;0;0;null;null
+114;False;Ocean114;null;ocean;null;-1;-1;795;1694;[4,7,168,137,171,108,144,51];null;0;0;0;0;0;0;null;null
+115;False;Ocean115;null;ocean;null;-1;-1;2032;610;[163,169,140,145,123,158,127];null;0;0;0;0;0;0;null;null
+116;False;Ocean116;null;ocean;null;-1;-1;2326;1403;[101,103,135,142,146,122];null;0;0;0;0;0;0;null;null
+117;False;Ocean117;null;ocean;null;-1;-1;1281;432;[65,130,99,68,167,107,76,173,85,152,121,159];null;0;0;0;0;0;0;null;null
+118;False;Ocean118;null;ocean;null;-1;-1;2602;616;[163,133,105,106,112,113,123];null;0;0;0;0;0;0;null;null
+119;False;Ocean119;null;ocean;null;-1;-1;2800;1198;[132,166,135,72,103,170,104,112,113];null;0;0;0;0;0;0;null;null
+120;False;Ocean120;null;ocean;null;-1;-1;1796;1646;[33,162,35,165,109,78,143,142,122];null;0;0;0;0;0;0;null;null
+121;False;Ocean121;null;ocean;null;-1;-1;1613;239;[37,167,169,176,145,20,85,117,94,159];null;0;0;0;0;0;0;null;null
+122;False;Ocean122;null;ocean;null;-1;-1;2108;1663;[32,33,35,101,142,116,23,120];null;0;0;0;0;0;0;null;null
+123;False;Ocean123;null;ocean;null;-1;-1;2389;471;[163,106,115,118,127];null;0;0;0;0;0;0;null;null
+124;False;Ocean124;null;ocean;null;-1;-1;114;1011;[129,147,164];null;0;0;0;0;0;0;null;null
+125;False;Ocean125;null;ocean;null;-1;-1;543;297;[96,110,175,111,52,53,152,29,126];null;0;0;0;0;0;0;null;null
+126;False;Ocean126;null;ocean;null;-1;-1;266;314;[160,134,111,175,125];null;0;0;0;0;0;0;null;null
+127;False;Ocean127;null;ocean;null;-1;-1;2246;260;[66,106,44,16,145,115,123,93];null;0;0;0;0;0;0;null;null
+128;False;Ocean128;null;ocean;null;-1;-1;3072;451;[6,166,105,112,17,19,86,22];null;0;0;0;0;0;0;null;null
+129;False;Ocean129;null;ocean;null;-1;-1;181;750;[160,164,175,24,124];null;0;0;0;0;0;0;null;null
+130;False;Ocean130;null;ocean;null;-1;-1;1518;802;[99,36,138,117,150,27,28,159];null;0;0;0;0;0;0;null;null
+131;False;Ocean131;null;ocean;null;-1;-1;1394;1891;[137,161,109,165];null;0;0;0;0;0;0;null;null
+132;False;Ocean132;null;ocean;null;-1;-1;3090;1157;[72,104,166,119];null;0;0;0;0;0;0;null;null
+133;False;Ocean133;null;ocean;null;-1;-1;2406;912;[163,103,113,146,118,158];null;0;0;0;0;0;0;null;null
+134;False;Ocean134;null;ocean;null;-1;-1;44;223;[160,126,111];null;0;0;0;0;0;0;null;null
+135;False;Ocean135;null;ocean;null;-1;-1;2538;1368;[101,102,103,170,116,119];null;0;0;0;0;0;0;null;null
+136;False;Ocean136;null;ocean;null;-1;-1;3047;1759;[102,104,174,148,55];null;0;0;0;0;0;0;null;null
+137;False;Ocean137;null;ocean;null;-1;-1;1118;1704;[161,131,108,109,144,114,149];null;0;0;0;0;0;0;null;null
+138;False;Ocean138;null;ocean;null;-1;-1;1266;1149;[130,99,162,144,21,149,150,91];null;0;0;0;0;0;0;null;null
+139;False;Ocean139;null;ocean;null;-1;-1;274;1888;[100,168,171,156,157];null;0;0;0;0;0;0;null;null
+140;False;Ocean140;null;ocean;null;-1;-1;1836;838;[3,70,169,115,151,88,158];null;0;0;0;0;0;0;null;null
+141;False;Ocean141;null;ocean;null;-1;-1;3077;218;[87,22,86,30];null;0;0;0;0;0;0;null;null
+142;False;Ocean142;null;ocean;null;-1;-1;1974;1289;[162,146,116,151,120,122];null;0;0;0;0;0;0;null;null
+143;False;Ocean143;null;ocean;null;-1;-1;1867;1898;[33,165,8,78,120,154];null;0;0;0;0;0;0;null;null
+144;False;Ocean144;null;ocean;null;-1;-1;1074;1470;[7,137,138,80,49,114,81,21,149];null;0;0;0;0;0;0;null;null
+145;False;Ocean145;null;ocean;null;-1;-1;1982;212;[66,169,176,115,121,26,61,127];null;0;0;0;0;0;0;null;null
+146;False;Ocean146;null;ocean;null;-1;-1;2189;1129;[133,103,142,116,151,158];null;0;0;0;0;0;0;null;null
+147;False;Ocean147;null;ocean;null;-1;-1;149;1225;[156,164,155,124];null;0;0;0;0;0;0;null;null
+148;False;Ocean148;null;ocean;null;-1;-1;2775;1895;[101,102,136,174,18,83,153];null;0;0;0;0;0;0;null;null
+149;False;Ocean149;null;ocean;null;-1;-1;1300;1381;[162,137,138,109,144,81];null;0;0;0;0;0;0;null;null
+150;False;Ocean150;null;ocean;null;-1;-1;1556;1093;[162,98,36,130,3,138,151,58,28];null;0;0;0;0;0;0;null;null
+151;False;Ocean151;null;ocean;null;-1;-1;1837;1074;[162,3,140,142,47,146,150,158];null;0;0;0;0;0;0;null;null
+152;False;Ocean152;null;ocean;null;-1;-1;951;314;[96,65,67,107,172,110,53,117,125,62];null;0;0;0;0;0;0;null;null
+153;False;Ocean153;null;ocean;null;-1;-1;2475;1969;[43,18,148,154,59];null;0;0;0;0;0;0;null;null
+154;False;Ocean154;null;ocean;null;-1;-1;2150;1940;[8,153,43,143];null;0;0;0;0;0;0;null;null
+155;False;Ocean155;null;ocean;null;-1;-1;362;1328;[100,164,168,11,46,147,54,90,156];null;0;0;0;0;0;0;null;null
+156;False;Ocean156;null;ocean;null;-1;-1;39;1541;[100,139,147,155,157];null;0;0;0;0;0;0;null;null
+157;False;Ocean157;null;ocean;null;-1;-1;61;1942;[139,156];null;0;0;0;0;0;0;null;null
+158;False;Ocean158;null;ocean;null;-1;-1;2155;916;[163,133,140,146,115,151];null;0;0;0;0;0;0;null;null
+159;False;Ocean159;null;ocean;null;-1;-1;1569;586;[130,68,37,45,117,121,27];null;0;0;0;0;0;0;null;null
+160;False;Ocean160;null;ocean;null;-1;-1;59;469;[129,126,134,175];null;0;0;0;0;0;0;null;null
+161;False;Ocean161;null;ocean;null;-1;-1;1106;1952;[137,131,108];null;0;0;0;0;0;0;null;null
+162;False;Ocean162;null;ocean;null;-1;-1;1561;1304;[138,109,142,149,150,151,120,58];null;0;0;0;0;0;0;null;null
+163;False;Ocean163;null;ocean;null;-1;-1;2303;703;[133,115,118,123,158];null;0;0;0;0;0;0;null;null
+164;False;Ocean164;null;ocean;null;-1;-1;417;1051;[129,50,147,24,90,155,124];null;0;0;0;0;0;0;null;null
+165;False;Ocean165;null;ocean;null;-1;-1;1605;1941;[120,131,109,143];null;0;0;0;0;0;0;null;null
+166;False;Ocean166;null;ocean;null;-1;-1;3108;941;[128,132,72,112,119];null;0;0;0;0;0;0;null;null
+167;False;Ocean167;null;ocean;null;-1;-1;1393;35;[97,107,176,117,121];null;0;0;0;0;0;0;null;null
+168;False;Ocean168;null;ocean;null;-1;-1;534;1690;[100,4,139,171,46,114,51,155];null;0;0;0;0;0;0;null;null
+169;False;Ocean169;null;ocean;null;-1;-1;1815;471;[37,70,140,79,145,115,20,121];null;0;0;0;0;0;0;null;null
+170;False;Ocean170;null;ocean;null;-1;-1;2813;1403;[104,119,102,135];null;0;0;0;0;0;0;null;null
+171;False;Ocean171;null;ocean;null;-1;-1;544;1971;[168,114,139,108];null;0;0;0;0;0;0;null;null
+172;False;Ocean172;null;ocean;null;-1;-1;950;55;[152,107,110];null;0;0;0;0;0;0;null;null
+173;False;Ocean173;null;ocean;null;-1;-1;1074;546;[65,99,67,71,12,76,117];null;0;0;0;0;0;0;null;null
+174;False;Ocean174;null;ocean;null;-1;-1;3124;1966;[136,148];null;0;0;0;0;0;0;null;null
+175;False;Ocean175;null;ocean;null;-1;-1;264;527;[160,129,69,52,24,92,125,126];null;0;0;0;0;0;0;null;null
+176;False;Ocean176;null;ocean;null;-1;-1;1675;26;[97,167,75,145,121,26];null;0;0;0;0;0;0;null;null

@@ -1,0 +1,1 @@
+from histemul_server import app as application

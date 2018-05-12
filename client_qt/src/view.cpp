@@ -25,37 +25,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "view.h"
 
-/*View::View(Model &model, Notifications &notifications, unsigned int width, unsigned int height, QString ui)
-{
-    qmlRegisterType<Map>("Histemul", 0,1, "Map");
-
-    //QSize qsize(width, height);
-    //setMaximumSize(qsize);
-    //setMinimumSize(qsize);
-    setWidth(width);
-    setHeight(height);
-    setResizeMode(QQuickView::SizeRootObjectToView);
-
-    rootContext()->setContextProperty("model", &model);
-    rootContext()->setContextProperty("notifications", &notifications);
-
-
-    setSource(QUrl::fromLocalFile(ui));
-    setClearBeforeRendering(false);
-
-    QQuickItem* rootQml = rootObject();
-    //rootQml->setProperty("width", width);
-    //rootQml->setProperty("height", height);
-
-    connect(&model, &Model::newMessage, &notifications, &Notifications::receiveNewMessage);
-    connect(&model, &Model::provinceModelChanged, &notifications, &Notifications::slotProvinceModelChanged);
-    connect(&model, &Model::modelChanged, &notifications, &Notifications::slotModelChanged);
-
-    mMap = rootQml->findChild<Map *>("map");
-    connect(this, &QQuickWindow::beforeSynchronizing, mMap, &Map::doJobBeforeRendering, Qt::DirectConnection);
-    //mMap->init(model, width, height);
-}*/
-
 void View::resizeEvent(QResizeEvent * ev)
 {
     mMap->resize(ev->size(), ev->oldSize());
@@ -79,5 +48,4 @@ View::View(unsigned int width, unsigned int height, QString ui, QUrl url, bool d
     QQuickItem* rootQml = rootObject();
     mMap = rootQml->findChild<Map *>("map");
     mMap->init(width, height, url, debug, player);
-
 }

@@ -25,8 +25,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from flask import Flask, request
 from engine import Engine
+from flask import Flask, request
 
 try:
     import simplejson as json
@@ -55,6 +55,7 @@ def jsonify(*args, **kwargs):
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
 
 app = Flask(__name__)
+
 
 engine = Engine()
 engine.start()

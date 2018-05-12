@@ -25,7 +25,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef MAP_H
 #define MAP_H
-#include "define.h"
 #include <list>
 #include <vector>
 #include <forward_list>
@@ -93,7 +92,7 @@ signals:
     void urlChanged();
     void tChanged();
     void moved();
-    void visibleProvinceChanged(QSet16 provinceAdded);
+    void visibleProvinceChanged(QSet<quint16> provinceAdded);
     void provinceModelChanged(QList<QVariant> visibleProvinceChanged);
     void armyModelChanged(QList<QVariant> armyChanged);
 
@@ -104,9 +103,6 @@ public slots:
 
 private slots:
     void writeFps();
-    void slotProvinceModelChanged(QSet16 provinceChanged);
-    void slotProvinceFillModelChanged(QSet16 provinceFillChanged);
-    void slotArmyModelChanged(QSet16 armyChanged);
     void slotProvinceUpdateReply(QNetworkReply* reply);
 
 private:
@@ -169,7 +165,7 @@ private:
     EnumDirection mNext;
     bool mWaitForMove;
     //std::list<unsigned short> mRefreshId;
-    QSet16 mRefreshId;
+    QSet<quint16> mRefreshId;
     int mFrame = 0;
     QNetworkAccessManager *mManager = NULL;
     std::vector<QString> mProText;

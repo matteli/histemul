@@ -26,6 +26,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <QApplication>
 #include "view.h"
 #include <QUrl>
+#include <QCommandLineParser>
 
 int main(int argc, char *argv[])
 {

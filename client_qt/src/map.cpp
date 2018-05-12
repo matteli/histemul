@@ -29,29 +29,33 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <cmath>
 //#include <QTest>
-#include "message.h"
 #include <QOpenGLContext>
+#include <QRegularExpression>
+#include <QUrlQuery>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDir>
 
 Map::Map()
 {
-    qRegisterMetaType<QSet16>("QSet16");
     // configuration
-    initShadingColor(DIRMAP + "config/shadingcolor.csv");
-    //initShadingColor(DIRMAP + "config/shadingcolor.yaml");
-    readConfigMap(DIRMAP);
+    initShadingColor("./maps/config/shadingcolor.csv");
+    readConfigMap("./maps/");
 
     mLevelInit = log(float(mSizeBlock))/log(2.);
 
     mBlock.resize(mNbBlockHeight * mNbBlockWidth);
     mHit.resize(mNbBlockWidth * mSizeBlock);
 
-    std::vector<unsigned short> idMapLocal = returnValidIdMap(DIRMAP);
+    std::vector<unsigned short> idMapLocal = returnValidIdMap("./maps/");
 
     for (unsigned int i = 0; i < idMapLocal.size(); i++)
     {
-        addLightId(idMapLocal[i], DIRMAP);
-        addBoundsId(idMapLocal[i], DIRMAP);
-        addHitId(idMapLocal[i], DIRMAP);
+        addLightId(idMapLocal[i], "./maps/");
+        addBoundsId(idMapLocal[i], "./maps/");
+        addHitId(idMapLocal[i], "./maps/");
     }
     mMaxId = idMapLocal.size() - 1;
 
@@ -113,8 +117,6 @@ void Map::setFill(QString fill)
     }
     return;
 }
-
-
 
 void Map::setT(qreal t)
 {
@@ -295,29 +297,6 @@ void Map::writeFps()
     std::cout << fps << std::endl;
 }
 
-void Map::slotProvinceModelChanged(QSet16 provinceChanged)
-{
-    QList<QVariant> l;
-    QSetIterator<quint16> i(provinceChanged);
-    while (i.hasNext())
-        l.push_back(i.next());
-    emit provinceModelChanged(l);
-}
-void Map::slotProvinceFillModelChanged(QSet16 provinceFillChanged)
-{
-    mRefreshId += provinceFillChanged;
-}
-
-void Map::slotArmyModelChanged(QSet16 armyChanged)
-{
-    QList<QVariant> l;
-    QSetIterator<quint16> i(armyChanged);
-    while (i.hasNext())
-        l.push_back(i.next());
-    emit armyModelChanged(l);
-}
-
-
 
 void Map::move(EnumDirection d)
 {
@@ -392,8 +371,8 @@ void Map::move(EnumDirection d)
 
 bool Map::listVisibleProvince()
 {
-    QSet16 provinceAdded;
-    QSet16 visibleProvince;
+    QSet<quint16> provinceAdded;
+    QSet<quint16> visibleProvince;
 
     for (unsigned int i = 0; i < mBoundsProvince.size(); ++i)
     {
@@ -406,7 +385,6 @@ bool Map::listVisibleProvince()
         emit visibleProvinceChanged(provinceAdded);
     return (true);
 }
-
 
 void Map::changeTopLeftBlock(int interval)
 {
@@ -461,7 +439,6 @@ void Map::doJobBeforeRendering()
 
     }
 }*/
-
 
 bool Map::drawMap()
 {
@@ -705,7 +682,6 @@ void Map::drawVertices()
     mProgram->release();
     return;
 }
-
 
 void Map::saveMap()
 {
@@ -1006,64 +982,6 @@ bool Map::initShadingColor(std::string fileName)
 
     return (true);
 }
-
-
-/*bool Map::initShadingColor(std::string file)
-{
-    std::ifstream fin(file);
-    YAML::Parser parser(fin);
-
-    YAML::Node doc;
-    parser.GetNextDocument(doc);
-
-    for (unsigned i=0; i < doc.size(); i++)
-    {
-        ColorShading cs;
-        ColorShading cs1;
-        const YAML::Node& colors = doc[i]["colors"];
-
-        unsigned int level0;
-        colors[0]["level"] >> level0;
-        unsigned int r,g,b;
-        colors[0]["color"][0] >> r;
-        colors[0]["color"][1] >> g;
-        colors[0]["color"][2] >> b;
-        QColor col0(r, g, b);
-
-        for (unsigned j=1; j < colors.size(); j++)
-        {
-           unsigned int level1;
-           colors[j]["level"] >> level1;
-           colors[j]["color"][0] >> r;
-           colors[j]["color"][1] >> g;
-           colors[j]["color"][2] >> b;
-           QColor col1(r, g, b);
-           unsigned int levelInf, levelSup;
-           if (j == 1)
-               levelInf = 0;
-           else
-               levelInf = level0;
-
-           if (j == (colors.size() - 1))
-               levelSup = 64;
-           else
-               levelSup = level1;
-
-           for (unsigned int level = levelInf; level < levelSup; level++)
-           {
-               int rr = (col1.red()-col0.red()) / ((float)level1 - (float)level0) * level + (col0.red() * level1 - col1.red() * level0) / (level1 - level0);
-               int gg = (col1.green()-col0.green()) / ((float)level1 - (float)level0) * level + (col0.green() * level1 - col1.green() * level0) / (level1 - level0);
-               int bb = (col1.blue()-col0.blue()) / ((float)level1 - (float)level0) * level + (col0.blue() * level1 - col1.blue() * level0) / (level1 - level0);
-               cs[level].setRgb(rr, gg, bb);
-               cs1[level].setRgb((rr - 50) < 0 ? 0 : (rr - 50), (gg - 50) < 0 ? 0 : (gg - 50), (bb - 50) < 0 ? 0 : (bb - 50));
-           }
-           level0 = level1;
-           col0 = col1;
-        }
-        mShadingColor.push_back(std::pair<ColorShading, ColorShading>(cs, cs1));
-    }
-    return (true);
-}*/
 
 std::vector<unsigned short> Map::returnValidIdMap(std::string sDir)
 {

@@ -29,8 +29,6 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <QtQuick/QQuickItem>
 #include <QQmlContext>
 #include "map.h"
-#include "model.h"
-#include "notification.h"
 #include <QUrl>
 
 class View : public QQuickView

@@ -18,10 +18,7 @@ QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += map.cpp \
     main.cpp \
-    message.cpp \
-    define.cpp \
-    view.cpp \
-    notification.cpp
+    view.cpp
 
 lupdate_only{
 SOURCES +=
@@ -29,10 +26,7 @@ SOURCES +=
 
 HEADERS  += \
     map.h \
-    define.h \
-    message.h \
-    view.h \
-    notification.h
+    view.h
 
 TRANSLATIONS = histemul_fr.ts
 
@@ -43,7 +37,6 @@ DISTFILES += \
     ui/Units.qml \
     ui/units.js \
     ui/AnimatedUnits.qml \
-    ui/Notification.qml \
     ui/Cities.qml \
     ui/scripts/units.js \
     ui/scripts/text.js \
@@ -56,7 +49,6 @@ DISTFILES += \
     ui/request.js \
     ui/js/fixedSpriteMap.js \
     ui/js/request.js \
-    ui/js/text.js \
     ui/js/units.js \
     ui/gfx/cities/catapult.png \
     ui/gfx/cities/euro_city_1.png \

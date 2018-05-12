@@ -43,7 +43,7 @@ class Engine(threading.Thread):
         self.time0 = time.time()
         self.update_flag_global.set()
         self.update_flag_tick[1].set()
-        self.date = datetime.date(1,1,1000)
+        self.date = datetime.date(1000,1,1)
         self.day = datetime.timedelta(days=1)
         
 

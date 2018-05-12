@@ -10,8 +10,5 @@ The server is the part of the code which have the logic of the game. It is encod
 
 Use Python >= 3.4
 
-Dependency :
-* PyYAML
-
 To run :
 python3 histemul_server.py

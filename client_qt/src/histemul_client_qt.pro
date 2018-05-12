@@ -103,4 +103,6 @@ DISTFILES += \
     ui/components/Units.qml \
     ui/components/Window.qml \
     ui/ui.qml \
-    ui/Shield.qml
+    ui/Shield.qml \
+    ui/.gitignore \
+    .gitignore

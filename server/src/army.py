@@ -28,6 +28,7 @@ from mongoengine import Document, ReferenceField, IntField, ListField, BooleanFi
 
 #TODO: make origin the pk
 
+
 class Army(Document):
 
     for_the = ReferenceField('Person')

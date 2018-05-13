@@ -37,22 +37,12 @@ from armory import Armory
 from mongoengine import connect, QuerySet
 import random
 
+
 #class Model(dict):
 class Model():
     def __init__(self):
         connect('histemul')
-        '''self['army'] = Army.objects
-        self['battle'] = Battle.objects
-        self['culture'] = Culture.objects
-        self['land'] = Land.objects
-        self['person'] = Person.objects
-        self['player'] = Player.objects
-        self['province'] = Province.objects
-        self['title'] = Title.objects
-        self['war'] = War.objects
-        self['armory'] = Armory.objects'''
         self.orders = {}
-
 
     def end_order(self, status):
         if status == 'order':
@@ -312,7 +302,6 @@ class Model():
                     battle.end()
                 
                 battle.save()
-
                 
     def a_star(self, current, end):
         if current == end:
@@ -392,8 +381,9 @@ class Model():
             return Armory
         return None
 
-    def get_in_model(self, cls, atts, idd):
-        if not isinstance(idd, int) or idd >= 0:
+    def get_in_model(self, type, player, cls, atts, idd):
+        #if not isinstance(idd, int) or idd >= 0:
+        if type == 'get':
             response = {}
             for att in atts:
                 response[att] = []
@@ -410,14 +400,26 @@ class Model():
                     break
             return response
             
-        else:
-            att_tab = atts[0].split('.')
+        elif type == 'get_all':
+            if (idd == 'all'):
+                qset = self.get_cls(cls).objects
 
-            if len(att_tab) == 1:
-                return self.list_qset_atts(self.get_cls(cls).objects, atts)
-            elif len(att_tab) == 2:
-                return self.list_qset_atts_2(self.get_cls(cls).objects, atts)
+            att_no_union = []
+            att_union = []
+            for att in atts:
+                if att.count('.'):
+                    att_union.append(att)
+                else:
+                    att_no_union.append(att)
 
+            result_non_union = []
+            result_union = []
+            if att_no_union:
+                result_non_union = self.list_qset_atts(qset, atts)
+            if att_union:
+                result_union = self.list_qset_atts_2(qset, atts)
+
+            return result_non_union + result_union
        
     def list_list_att(self, lis, att):
         result = []
@@ -426,17 +428,17 @@ class Model():
         return result
     
     def list_qset_atts(self, qset, atts):
-        ad = {}
+        af = {}
         pj = {}
 
         for att in atts:
-            ad[att] = '$' + att
+            af[att] = '$' + att
             pj[att] = True
 
         pipeline = [
             {
                 '$addFields':
-                    ad
+                    af
             },
 
             {
@@ -446,24 +448,30 @@ class Model():
         ]
 
         #t0 = time.perf_counter()
-        #res = list(self[cls].aggregate(*pipeline))
         res = list(qset.aggregate(*pipeline))
         #t1 = time.perf_counter()
         #print (t1-t0)
         return res
 
     def list_qset_atts_2(self, qset, atts):
-        att = atts[0].split('.')
-        at = getattr(qset._document, att[0])
+        #att = atts[0].split('.')
+        att_base = atts[0].split('.')[0]
+        at = getattr(qset._document, att_base)
         fr = at.document_type._class_name.lower()
+        af = {}
+        pj = {}
+
+        for att in atts:
+            at = att.split('.')
+            af[att] = {'$arrayElemAt': ['$object.' + at[1], 0]}
+            pj[att] = True
         
         pipeline = [
             {
                 '$lookup':
                     {
-                        #'from': pro[0],
                         'from': fr,
-                        'localField': att[0],
+                        'localField': att_base,
                         'foreignField': '_id',
                         'as': 'object'
                     }
@@ -471,19 +479,18 @@ class Model():
 
             {
                 '$addFields':
-                    {
-                        atts[0]: {'$arrayElemAt': ['$object.' + att[1], 0]},
-                        #'id': '$_id'
-                    }
+                    af
+                    #{
+                    #    atts[0]: {'$arrayElemAt': ['$object.' + att[1], 0]},
+                    #}
             },
 
             {
                 '$project':
-                    {
-                        #'id': True,
-                        #'_id': True,
-                        atts[0]: True
-                    }
+                    pj
+                    #{
+                    #    atts[0]: True
+                    #}
             }
         ]
         #t0 = time.perf_counter()

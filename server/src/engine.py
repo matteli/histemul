@@ -30,6 +30,7 @@ import threading
 import time
 import datetime
 
+
 class Engine(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -45,7 +46,6 @@ class Engine(threading.Thread):
         self.update_flag_tick[1].set()
         self.date = datetime.date(1000,1,1)
         self.day = datetime.timedelta(days=1)
-        
 
     def run(self):
         print('Engine started.')

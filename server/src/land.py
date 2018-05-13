@@ -26,6 +26,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 from mongoengine import StringField, FloatField, Document
 
+
 class Land(Document):
 
     name = StringField(primary_key=True)

@@ -180,7 +180,7 @@ void Map::updateDataProvince()
     postData.addQueryItem("type", "get_all");
     postData.addQueryItem("player", mPlayer);
     postData.addQueryItem("cls", "province");
-    postData.addQueryItem("id", "-1");
+    postData.addQueryItem("id", "all");
     postData.addQueryItem("atts", fill() + ".color");
 
 

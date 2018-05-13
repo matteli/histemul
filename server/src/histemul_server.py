@@ -39,6 +39,7 @@ import datetime
 from bson.objectid import ObjectId
 from flask import Response
 
+
 class MongoJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, (datetime.datetime, datetime.date)):
@@ -55,8 +56,6 @@ def jsonify(*args, **kwargs):
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
 
 app = Flask(__name__)
-
-
 engine = Engine()
 engine.start()
 
@@ -75,7 +74,7 @@ def requesting():
                 idd = int(idd)
             except:
                 pass
-            return jsonify(engine.model.get_in_model(cls, atts, idd))
+            return jsonify(engine.model.get_in_model(type, player, cls, atts, idd))
 
         elif type == 'get_status' or type == 'post_msg':
             response = {}

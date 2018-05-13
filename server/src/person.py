@@ -82,5 +82,4 @@ class Person(Document):
         if self.spouse:
             self.spouse.spouse = None
             self.spouse = None
-        self.die = date.strftime('%Y,%m,%d')
-        
+        self.die = date.strftime('%Y,%m,%d')    

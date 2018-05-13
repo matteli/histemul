@@ -64,7 +64,7 @@ Item {
                 RQ.getTimeRemaining(time_remaining, 'interval');
                 map.nbFilesReceived = 0;
                 map.nbFilesAsked = 2;
-                map.updateUI();
+                map.updateInfoBar();
                 map.updateMap();
                 console.log('finish');
             }
@@ -76,7 +76,7 @@ Item {
             onTickChanged:{
                 RQ.getUpdate(clock, 'tick', tick+1);
                 map.updateMap();
-                map.updateUI();
+                map.updateInfoBar();
             }
         }
 
@@ -84,12 +84,12 @@ Item {
         {
             for (var i in armyFile)
                 armyFile[i] = false;
-            RQ.getAll(army, 'army', 'knights;location;attitude;morale;way;next_province', 'army_parameters');
-            RQ.getAll(army, 'army', 'for_the.player', 'army_for_the');
-            RQ.getAll(province, 'province', 'population;siege;morale', 'province_others_parameters');
+            RQ.getAll(army, 'army', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
+            RQ.getAll(army, 'army', 'for_the.player', 'all', 'army_for_the');
+            RQ.getAll(province, 'province', 'population;siege;morale', 'all', 'province_others_parameters');
         }
 
-        function updateUI()
+        function updateInfoBar()
         {
             if (root.provinceSelected){
                 var p = root.provinceSelected;
@@ -104,9 +104,22 @@ Item {
             }
         }
 
+        function updateTopBar()
+        {
+
+        }
+
+        function updatePeaceBar()
+        {
+            if (root.leftMenu.peaceBar.visible)
+            {
+                RQ.getAll(person, 'person', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
+            }
+        }
+
         Component.onCompleted:
         {
-            RQ.getAll(province, 'province', 'army_x;army_y;city_x;city_y;land', 'province_fixed_parameters');
+            RQ.getAll(province, 'province', 'army_x;army_y;city_x;city_y;land', 'all', 'province_fixed_parameters');
         }
 
         onFilesReceived:
@@ -136,17 +149,6 @@ Item {
 
             return;
         }
-
-        /*onArmyModelChanged:
-        {
-            armySprite.manage(armyChanged);
-        }
-
-        onProvinceModelChanged:
-        {
-            citySprite.manage(visibleProvinceChanged);
-            //console.log(visibleProvinceChanged);
-        }*/
 
         onMoved:
         {
@@ -178,7 +180,7 @@ Item {
                     else
                     {
                         root.provinceSelected = p;
-                        map.updateUI();
+                        map.updateInfoBar();
                         map.armySprite.unselectAll();
                     }
                 }
@@ -316,6 +318,7 @@ Item {
     }
 
     property int provinceSelected: 0
+    property int personSelected: 0
     property int sizeBorder: 15
     property string colorFont: "#ff101010"
     property string colorFontDisabled: "#ff606060"
@@ -392,10 +395,34 @@ Item {
             }
         }
     }*/
+    Comp.Window {
+        id: topMenu
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 50
+        style: 1
+        Row{
+            id: rowTopMenu
+            y: 15
+            x: 15
+            Text
+            {
+                id: selected_person
+                text: ""
+                renderType: Text.NativeRendering
+                wrapMode: Text.Wrap
+                font.pointSize: 16
+                font.family: "Linux Biolinum"
+                font.bold: true
+                color: colorFont
+            }
+        }
+
+    }
 
     Comp.Window {
-        id : leftMenu
-        property int countryPeace: 0
+        id: leftMenu
         style: 2
         states:
             State {
@@ -412,23 +439,33 @@ Item {
         x: -width
         //y: sizeBorder
         //height: parent.height - 2*sizeBorder
-        anchors.top: parent.top
+        anchors.top: topMenu.bottom
         anchors.bottom: parent.bottom
+
         Column{
             anchors.horizontalCenter: parent.horizontalCenter
             y: 20
             spacing: 0
             id: peaceBar
             visible: false
+
             Row
             {
                 Image {
                     source: "gfx/gui/wood_square.png"
-                    /*Image {
+                    //anchors.horizontalCenter: parent.horizontalCenter
+                    Comp.Shield{
+                        id: selected_province_domain_of_holder_player_armory_2
+                    }
+                }
+
+                Image {
+                    source: "gfx/gui/wood_square.png"
+                    Image {
                         id: pbTopShieldLeft
-                        source: "gfx/shields/shield_" + model.getName("Country", model.controlled()) + "_1.png"
+                        //source: "gfx/shields/shield_" + model.getName("Country", model.controlled()) + "_1.png"
                         anchors.centerIn: parent
-                    }*/
+                    }
                 }
                 Image {
                     source: "gfx/gui/peace_arrow.png"
@@ -446,21 +483,28 @@ Item {
             }
         }
 
+
+
         Column{
             anchors.horizontalCenter: parent.horizontalCenter
             y: 20
             spacing: 0
             id: infoBar
             visible: true
+
             Image {
                 source: "gfx/gui/wood_square.png"
                 anchors.horizontalCenter: parent.horizontalCenter
                 Comp.Shield{
                     id: selected_province_domain_of_holder_player_armory
-                    tinctures: ["blue", "red"]
-                    division: "plain"
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: selected_person.text = selected_province_domain_of_holder_name.text
+                    }
                 }
+
             }
+
             Text
             {
                 id: selected_province_domain_of_holder_name
@@ -474,6 +518,7 @@ Item {
                 font.bold: true
                 color: colorFont
             }
+
             Text
             {
                 id: selected_province_domain_of_name
@@ -527,6 +572,7 @@ Item {
                 horizontalTileMode: BorderImage.Repeat
                 source: "gfx/gui/line.png"
             }
+
             Text
             {
                 id: selected_province_name
@@ -556,10 +602,8 @@ Item {
                         if (status == "normal")
                             RQ.postMsg(rally_troops_button, 'status', 'rally_troops', root.provinceSelected);
                     }
-
                 }
             }
         }
-
     }
 }

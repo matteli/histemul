@@ -24,7 +24,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from mongoengine import Document, StringField, IntField, ReferenceField
+from mongoengine import Document, StringField, IntField, ReferenceField, DictField
 from person import Person
 
 
@@ -35,6 +35,7 @@ class Title(Document):
     level = IntField()
     suzerain = ReferenceField('self')
     holder = ReferenceField('Person')
+    name_number = DictField()
 
     @property
     def vassals(self):

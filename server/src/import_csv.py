@@ -1,5 +1,6 @@
 from mongoengine import *
 import importlib
+import ast
 
 def import_csv(file):
     #import pdb;pdb.set_trace()
@@ -18,6 +19,9 @@ def import_csv(file):
                     if a:
                         t = a.split(",")
                         d[header[i]] = t
+                elif tab_li[i][0] == "{":
+                    t = ast.literal_eval(tab_li[i])
+                    d[header[i]] = t
                 else:
                     if tab_li[i] != 'null':
                         d[header[i]] = tab_li[i]

@@ -122,10 +122,10 @@ class Model():
             result = self.move_troops(Player.objects.get(pk=player), Army.objects.get(pk=idd), Province.objects.get(pk=int(opt[0])), status)
 
         elif msg == 'declare_war':
-            result = self.declare_war(Player.objects.get(pk=player).controlled[0], Province.objects.get(pk=idd).domain_of.holder, status)
+            result = self.declare_war(Person.objects.get(pk=int(opt[0])), Province.objects.get(pk=idd).domain_of.holder, status)
 
         elif msg == 'propose_peace':
-            result = self.propose_peace(Player.objects.get(pk=player).controlled[0], Province.objects.get(pk=idd).domain_of.holder, opt, status)
+            result = self.propose_peace(Person.objects.get(pk=int(opt[0])), Province.objects.get(pk=idd).domain_of.holder, opt[1:], status)
 
         if result == 'accepted' and status=='order':
             if player not in self.orders:
@@ -339,25 +339,6 @@ class Model():
                             adja.f = adja.g + (abs(end.army_x-adja.army_x)+abs(end.army_y-adja.army_y))/100
         return []
 
-    def get_instances(self, instance, pro_tab, i_pro_tab, response):
-        try:
-            ins = getattr(instance, pro_tab[i_pro_tab])
-        except AttributeError:
-            #response.append('AttributeError')
-            return
-
-        if isinstance(ins, QuerySet) or isinstance(ins, list):
-            for i in ins:
-                if i_pro_tab + 1 < len(pro_tab):
-                    return self.get_instances(i, pro_tab, i_pro_tab + 1, response)
-                else:
-                    response.append(i)
-        else:
-            if i_pro_tab + 1 < len(pro_tab):
-                return self.get_instances(ins, pro_tab, i_pro_tab + 1, response)
-            else:
-                response.append(ins)
-
     def get_cls(self, cls):
         if cls == 'army':
             return Army
@@ -380,6 +361,25 @@ class Model():
         if cls == 'armory':
             return Armory
         return None
+
+    def get_instances(self, instance, pro_tab, i_pro_tab, response):
+        try:
+            ins = getattr(instance, pro_tab[i_pro_tab])
+        except AttributeError:
+            #response.append('AttributeError')
+            return
+
+        if isinstance(ins, QuerySet) or isinstance(ins, list):
+            for i in ins:
+                if i_pro_tab + 1 < len(pro_tab):
+                    return self.get_instances(i, pro_tab, i_pro_tab + 1, response)
+                else:
+                    response.append(i)
+        else:
+            if i_pro_tab + 1 < len(pro_tab):
+                return self.get_instances(ins, pro_tab, i_pro_tab + 1, response)
+            else:
+                response.append(ins)
 
     def get_in_model(self, type, player, cls, atts, idd):
         #if not isinstance(idd, int) or idd >= 0:
@@ -498,3 +498,30 @@ class Model():
         #t1 = time.perf_counter()
         #print (t1-t0)
         return res
+
+    def get_player_person_title(self, player, arg):
+        try:
+            province = Province.objects.get(pk=arg).select_related(3)
+            player = Player.objects.get(pk=player)
+        except:
+            return {'res': 0}
+        if province.domain_of.holder.player != player:
+            return {'res': 0}
+        
+        response = {}
+        response['name'] = province.domain_of.holder.name
+        titles = Title.objects.filter(holder=province.domain_of.holder)
+        level = 0
+        title = None
+        for t in titles:
+            if t.level > level:
+                title = t
+                level = t.level
+        
+        response['title'] = title.name
+        response['level'] = title.level
+        response['number'] = title.name_number[province.domain_of.holder.name]
+        response['res'] = province.domain_of.holder.id
+        return response
+
+

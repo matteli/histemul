@@ -105,4 +105,5 @@ DISTFILES += \
     ui/ui.qml \
     ui/Shield.qml \
     ui/.gitignore \
-    .gitignore
+    .gitignore \
+    ui/js/func.js

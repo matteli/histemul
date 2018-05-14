@@ -1,99 +1,99 @@
-name;level;suzerain;holder
-Earl of Berquinais;1;null;1
-Earl of Saguenis;1;null;null
-Earl of Bata;1;null;null
-Earl of Saintguene;1;null;null
-Earl of Verainis;1;null;null
-Earl of Anpompommen;1;null;null
-Earl of Normois;1;null;null
-Earl of Surshire;1;null;null
-Earl of Nitonnais;1;null;null
-Earl of Aldie;1;null;null
-Earl of Aupatou;1;null;null
-Earl of Sasache;1;null;null
-Earl of Chamraidie;1;null;null
-Earl of Orvence;1;null;2
-Earl of Marche;1;null;null
-Earl of Bresachderberg;1;null;null
-Earl of Niemern;1;null;null
-Earl of Hundlebersex;1;null;null
-Earl of Sachderpomyern;1;null;null
-Earl of Rela;1;null;null
-Earl of Orléaquidoc;1;null;null
-Earl of Saarmen;1;null;null
-Earl of Kehamwall;1;null;null
-Earl of Bourry;1;null;null
-Earl of Schleslenlensen;1;null;null
-Earl of Schlesrinmern;1;null;null
-Earl of Totoro;1;null;null
-Earl of Cucatanbo;1;null;null
-Earl of Saintnis;1;null;null
-Earl of Thüden;1;null;null
-Earl of Nordrinlin;1;null;null
-Earl of Essterland;1;null;null
-Earl of Cumwall;1;null;null
-Earl of Piry;1;null;null
-Earl of Durtinghamland;1;null;null
-Earl of Porricenna;1;null;null
-Earl of Reventia;1;null;null
-Earl of Rheinsachpommern;1;null;null
-Earl of Bourquige;1;null;3
-Earl of Lybonné;1;null;null
-Earl of Toutaine;1;null;null
-Earl of Rouche;1;null;null
-Earl of Hertfolk;1;null;null
-Earl of Hamsachberg;1;null;null
-Earl of Mova;1;null;null
-Earl of Marsaquiné;1;null;null
-Earl of Porti;1;null;null
-Earl of Auce;1;null;null
-Earl of Rouvoie;1;null;null
-Earl of Andie;1;null;null
-Earl of Chamjou;1;null;null
-Earl of Bourléaphigne;1;null;null
-Earl of Vetaivernais;1;null;null
-Earl of Algory;1;null;null
-Earl of Sufland;1;null;null
-Earl of Würtsen;1;null;null
-Earl of Norléatou;1;null;null
-Earl of Vazapeta;1;null;null
-Earl of Nottingfolk;1;null;null
-Earl of Bourléatondie;1;null;null
-Earl of Saardenlenmern;1;null;null
-Earl of Rouphiquivoie;1;null;null
-Earl of Hespomderlen;1;null;null
-Earl of Schlespomtemsen;1;null;null
-Earl of Pinais;1;null;null
-Earl of Berpomsen;1;null;null
-Earl of Auvernais;1;null;null
-Earl of Naserna;1;null;null
-Earl of Dauléagonis;1;null;null
-Earl of Mati;1;null;null
-Earl of Brebontonge;1;null;null
-Earl of Hampomyern;1;null;null
-Earl of Niesachden;1;null;null
-Earl of Lanry;1;null;null
-Earl of Schlespommen;1;null;null
-Earl of Progouphitou;1;null;null
-Earl of Ansen;1;null;null
-Earl of Bedthumwall;1;null;null
-Earl of Bobo;1;null;null
-Earl of Marnais;1;null;null
-Earl of Poigne;1;null;null
-Earl of Westderburg;1;null;null
-Earl of Worcewall;1;null;null
-Earl of Rheinberg;1;null;null
-Earl of Viva;1;null;null
-Earl of Vorpomderland;1;null;null
-Earl of Saarlenland;1;null;null
-Earl of Pesmigna;1;null;null
-Earl of Brelenlessen;1;null;null
-Earl of Daurailéajou;1;null;null
-Earl of Lyraigovoie;1;null;null
-Earl of Bourverpache;1;null;null
-Earl of Thüsachleslen;1;null;null
-Earl of Napotiza;1;null;null
-Earl of Auléanais;1;null;null
-Earl of Bourraimance;1;null;null
-Earl of Nielesberg;1;null;null
-Earl of Bobasma;1;null;null
+name;level;suzerain;holder;name_number
+Berquinais;1;null;1;{'Robert': 1}
+Saguenis;1;null;null;{}
+Bata;1;null;null;{}
+Saintguene;1;null;null;{}
+Verainis;1;null;null;{}
+Anpompommen;1;null;null;{}
+Normois;1;null;null;{}
+Surshire;1;null;null;{}
+Nitonnais;1;null;null;{}
+Aldie;1;null;null;{}
+Aupatou;1;null;null;{}
+Sasache;1;null;null;{}
+Chamraidie;1;null;null;{}
+Orvence;1;null;2;{'Jean': 1}
+Marche;1;null;null;{}
+Bresachderberg;1;null;null;{}
+Niemern;1;null;null;{}
+Hundlebersex;1;null;null;{}
+Sachderpomyern;1;null;null;{}
+Rela;1;null;null;{}
+Orléaquidoc;1;null;null;{}
+Saarmen;1;null;null;{}
+Kehamwall;1;null;null;{}
+Bourry;1;null;null;{}
+Schleslenlensen;1;null;null;{}
+Schlesrinmern;1;null;null;{}
+Totoro;1;null;null;{}
+Cucatanbo;1;null;null;{}
+Saintnis;1;null;null;{}
+Thüden;1;null;null;{}
+Nordrinlin;1;null;null;{}
+Essterland;1;null;null;{}
+Cumwall;1;null;null;{}
+Piry;1;null;null;{}
+Durtinghamland;1;null;null;{}
+Porricenna;1;null;null;{}
+Reventia;1;null;null;{}
+Rheinsachpommern;1;null;null;{}
+Bourquige;1;null;3;{'Philippe': 1}
+Lybonné;1;null;null;{}
+Toutaine;1;null;null;{}
+Rouche;1;null;null;{}
+Hertfolk;1;null;null;{}
+Hamsachberg;1;null;null;{}
+Mova;1;null;null;{}
+Marsaquiné;1;null;null;{}
+Porti;1;null;null;{}
+Auce;1;null;null;{}
+Rouvoie;1;null;null;{}
+Andie;1;null;null;{}
+Chamjou;1;null;null;{}
+Bourléaphigne;1;null;null;{}
+Vetaivernais;1;null;null;{}
+Algory;1;null;null;{}
+Sufland;1;null;null;{}
+Würtsen;1;null;null;{}
+Norléatou;1;null;null;{}
+Vazapeta;1;null;null;{}
+Nottingfolk;1;null;null;{}
+Bourléatondie;1;null;null;{}
+Saardenlenmern;1;null;null;{}
+Rouphiquivoie;1;null;null;{}
+Hespomderlen;1;null;null;{}
+Schlespomtemsen;1;null;null;{}
+Pinais;1;null;null;{}
+Berpomsen;1;null;null;{}
+Auvernais;1;null;null;{}
+Naserna;1;null;null;{}
+Dauléagonis;1;null;null;{}
+Mati;1;null;null;{}
+Brebontonge;1;null;null;{}
+Hampomyern;1;null;null;{}
+Niesachden;1;null;null;{}
+Lanry;1;null;null;{}
+Schlespommen;1;null;null;{}
+Progouphitou;1;null;null;{}
+Ansen;1;null;null;{}
+Bedthumwall;1;null;null;{}
+Bobo;1;null;null;{}
+Marnais;1;null;null;{}
+Poigne;1;null;null;{}
+Westderburg;1;null;null;{}
+Worcewall;1;null;null;{}
+Rheinberg;1;null;null;{}
+Viva;1;null;null;{}
+Vorpomderland;1;null;null;{}
+Saarlenland;1;null;null;{}
+Pesmigna;1;null;null;{}
+Brelenlessen;1;null;null;{}
+Daurailéajou;1;null;null;{}
+Lyraigovoie;1;null;null;{}
+Bourverpache;1;null;null;{}
+Thüsachleslen;1;null;null;{}
+Napotiza;1;null;null;{}
+Auléanais;1;null;null;{}
+Bourraimance;1;null;null;{}
+Nielesberg;1;null;null;{}
+Bobasma;1;null;null;{}

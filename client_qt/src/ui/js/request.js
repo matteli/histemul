@@ -9,62 +9,75 @@ function serialize (obj) {
   return str.join("&");
 }
 
-function getUpdate(clsLocal, propLocal, num){
-    var http_params = serialize({'type': 'get_update', 'player': player, 'num': num});
-    send(clsLocal, propLocal, http_params);
+function getUpdate(item, prop, num){
+    //var http_params = serialize({'type': 'get_update', 'player': player, 'prop': prop, 'num': num});
+    var http_params = JSON.stringify({'type': 'get_update', 'player': player, 'prop': prop, 'num': num});
+    send(item, prop, http_params);
 }
 
-function postMsg(clsLocal, propLocal, msg, idd, opt)
+function postMsg(item, prop, msg, idd, opt)
 {
     var option = (typeof opt !== 'undefined') ? opt : ';';
-    var http_params = serialize({'type': 'post_msg', 'player': player, 'msg': msg, 'id': idd, 'opt': option});
-    send(clsLocal, propLocal, http_params);
+    //var http_params = serialize({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
+    var http_params = JSON.stringify({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
+    send(item, prop, http_params);
     console.log("post " + msg)
 
 }
 
-function getStatus(clsLocal, propLocal, msg, idd, opt)
+function getStatus(item, prop, msg, idd, opt)
 {
     var option = (typeof opt !== 'undefined') ? opt : ';';
-    var http_params = serialize({'type': 'get_status', 'player': player, 'msg': msg, 'id': idd, 'opt': option});
-    send(clsLocal, propLocal, http_params);
-
+    //var http_params = serialize({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
+    var http_params = JSON.stringify({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
+    send(item, prop, http_params);
 }
 
-function getTimeRemaining(clsLocal, propLocal)
+function getTimeRemaining(item, prop)
 {
     var http_params = serialize({'type': 'get_time_remaining', 'player': player});
-    send(clsLocal, propLocal, http_params);
+    send(item, prop, http_params);
 }
 
-function send(clsLocal, propLocal, http_params)
+function send(item, props, http_params)
 {
-    function callBack(clsLocal, propLocal)
+    function callBack(item, props)
     {
         return function() {
             if(http.readyState == 4 && http.status == 200) {
-                //console.info(http.responseText);
+                console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
-                clsLocal[propLocal] = res['res'];
+                var prop = props.split(';');
+                for (var p in prop)
+                {
+                    item[prop[p]] = res[prop[p]];
+                }
             }
         }
     }
 
     var http = new XMLHttpRequest();
     http.open("POST", url, true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.onreadystatechange = callBack(clsLocal, propLocal);
+    http.setRequestHeader("Content-Type", "application/json");
+    http.onreadystatechange = callBack(item, props);
     http.send(http_params);
 }
 
-function get(clsLocal, propLocal, cls, id, atts, tab, cache)
+function getInFunction(item, props, func, arg)
+{
+    //var http_params = serialize({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'arg': arg});
+    var http_params = JSON.stringify({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'arg': arg});
+    send(item, props, http_params);
+}
+
+function get(item, props, cls, id, atts, tabs, cache)
 {
 
-    if (cache && (cls in cache) && (id in  cache[cls]) && (prop in cache[cls][id])) {
+    /*if (cache && (cls in cache) && (id in  cache[cls]) && (props in cache[cls][id])) {
         console.info('in cache');
-        clsLocal[propLocal] = cache[cls][id][atts];
+        item[props] = cache[cls][id][atts];
     }
-    else {
+    else {*/
         var http_params = serialize({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http = new XMLHttpRequest();
         //console.info("dd");
@@ -73,34 +86,59 @@ function get(clsLocal, propLocal, cls, id, atts, tab, cache)
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
                 //console.info(http.responseText);
+                var prop = props.split(';');
+                var att = atts.split(';');
+                if (tabs)
+                    var tab = tabs.split(';');
                 var res = JSON.parse(http.responseText);
-                if (tab)
-                    clsLocal[propLocal] = res[atts];
+                for (var i in att)
+                {
+                    var tab_bool = false;
+                    for (var j in tab)
+                    {
+                        if (tab[j] == att[i])
+                        {
+                            item[prop[i]] = res[att[i]];
+                            tab_bool = true;
+                            break;
+                        }
+                    }
+                    if (!tab_bool)
+                    {
+                        if (res[att[i]][0])
+                            item[prop[i]] = res[att[i]][0];
+                        else
+                            item[prop[i]] = 'Undefined';
+                    }
+                }
+
+                /*if (tab)
+                    item[props] = res[atts];
                 else
                     if (res[atts][0])
-                        clsLocal[propLocal] = res[atts][0];
+                        item[props] = res[atts][0];
                     else
-                        clsLocal[propLocal] = 'Undefined';
+                        item[props] = 'Undefined';
 
                 if (cache)
                 {
                     if (!(cls in cache)) cache[cls] = {};
                     if (!(id in cache[cls])) cache[cls][id] = {};
-                    cache[cls][id][atts] = clsLocal[propLocal];
-                }
+                    cache[cls][id][atts] = item[props];
+                }*/
 
             }
         }
         http.send(http_params);
-    }
+    //}
 }
 
-function getAll(clsLocal, cls, atts, id, iden)
+function getAll(item, cls, atts, id, iden)
 {
 
     /*if ((cls in cache) && (id in  cache[cls]) && (prop in cache[cls][id])) {
         console.info('in cache');
-        idLocal[propLocal] = cache[cls][id][prop];
+        idLocal[prop] = cache[cls][id][prop];
     }
     else {*/
         var http_params = serialize({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
@@ -120,18 +158,18 @@ function getAll(clsLocal, cls, atts, id, iden)
                     else
                         idd = res[r]['_id'];
                     delete res[r]['_id'];
-                    if (!(idd in clsLocal)) clsLocal[idd] = {};
+                    if (!(idd in item)) item[idd] = {};
                     //for (var p in ps)
-                        //clsLocal[idd][ps[p]] = res[r][ps[p]];
+                        //item[idd][ps[p]] = res[r][ps[p]];
                     for (var att in res[r])
                     {
-                        clsLocal[idd][att] = res[r][att];
+                        item[idd][att] = res[r][att];
                     }
 
-                    //clsLocal[idd] = res[r];
+                    //item[idd] = res[r];
                 }
                 map.filesReceived(iden);
-                //console.info(clsLocal);
+                //console.info(item);
 
                 /*if (!(cls in cache)) cache[cls] = {};
                 if (!(id in cache[cls])) cache[cls][id] = {};

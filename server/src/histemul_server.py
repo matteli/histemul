@@ -51,8 +51,8 @@ class MongoJsonEncoder(json.JSONEncoder):
 def jsonify(*args, **kwargs):
     """ jsonify with support for MongoDB ObjectId
     """
-    print (*args)
-    print (**kwargs)
+    #print (*args)
+    #print (**kwargs)
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
 
 app = Flask(__name__)
@@ -62,8 +62,14 @@ engine.start()
 @app.route('/', methods=['GET', 'POST'])
 def requesting():
     if request.method == 'POST':
-        player = request.form['player']
-        type = request.form['type']
+        if request.is_json:
+            requestjs = request.get_json()
+            player = requestjs['player']
+            type = requestjs['type']
+        else:
+            player = request.form['player']
+            type = request.form['type']
+        print (type)
 
         if type == 'get' or type == 'get_all':
             cls = request.form['cls']
@@ -78,39 +84,51 @@ def requesting():
 
         elif type == 'get_status' or type == 'post_msg':
             response = {}
+            prop = requestjs['prop']
             if not engine.update_flag_global.is_set():
                 if type == 'get_status':
-                    response['res'] = 'disabled'
+                    response[prop] = 'disabled'
                 else:
-                    response['res'] = 'rejected'
+                    response[prop] = 'rejected'
 
-            msg = request.form['msg']
-            try:
-                idd = [int(i) for i in (request.form['id'].split(';'))]
+            msg = requestjs['msg']
+            '''try:
+                idd = [int(i) for i in (requestjs['id'].split(';'))]
             except ValueError:
-                idd = request.form['id'].split(';')
-            opt = request.form['opt'].split(';')
-            for i in idd:
-                if player in engine.model.orders and engine.model.orders[player] and (msg, i) in engine.model.orders[player][0]:
-                    if type == 'get_status':
-                        response['res'] = 'accepted'
-                    else:
-                        response['res'] = 'rejected'
+                idd = requestjs['id'].split(';')'''
+            idd = requestjs['id']
+            opt = requestjs['opt'].split(';')
+            #for i in idd:
+            i = idd
+            if player in engine.model.orders and engine.model.orders[player] and (msg, i) in engine.model.orders[player][0]:
+                if type == 'get_status':
+                    response[prop] = 'accepted'
                 else:
-                    if type == 'get_status':
-                        result = engine.model.make_orders(player, msg, i, opt, 'test')
-                    else:
-                        result = engine.model.make_orders(player, msg, i, opt, 'order')
-                    response['res'] = result
+                    response[prop] = 'rejected'
+            else:
+                if type == 'get_status':
+                    result = engine.model.make_orders(player, msg, i, opt, 'test')
+                else:
+                    result = engine.model.make_orders(player, msg, i, opt, 'order')
+                response[prop] = result
             return jsonify(response)
 
         elif type == 'get_update':
             response = {}
-            num = int(request.form['num'])
+            prop = requestjs['prop']
+            num = int(requestjs['num'])
             if num == 0:
                 engine.update_flag_global.wait()
             else:
                 engine.update_flag_tick[num%2].wait()
 
-            response['res'] = engine.tick
+            response[prop] = engine.tick
             return jsonify(response)
+
+        elif type == 'get_in_function':
+            response = {}
+            func = requestjs['func']
+            arg = requestjs['arg']
+            if func=='player_person_title':
+                response = engine.model.get_player_person_title(player, arg)
+            return jsonify(response)            

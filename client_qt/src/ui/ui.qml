@@ -33,7 +33,7 @@ import "./js/request.js" as RQ
 import Histemul 0.1
 import "./js/fixedSpriteMap.js" as JSFixedSpriteMap
 import "./js/units.js" as JSUnits
-
+import "./js/func.js" as FC
 
 
 Item {
@@ -70,15 +70,6 @@ Item {
             }
 
         }*/
-        QtObject {
-            id: clock
-            property int tick
-            onTickChanged:{
-                RQ.getUpdate(clock, 'tick', tick+1);
-                map.updateMap();
-                map.updateInfoBar();
-            }
-        }
 
         function updateMap()
         {
@@ -89,33 +80,6 @@ Item {
             RQ.getAll(province, 'province', 'population;siege;morale', 'all', 'province_others_parameters');
         }
 
-        function updateInfoBar()
-        {
-            if (root.provinceSelected){
-                var p = root.provinceSelected;
-                RQ.get(selected_province_name, 'text', 'province',  p, 'name');
-                RQ.get(selected_province_domain_of_holder_name, 'text', 'province', p, 'domain_of.holder.name');
-                RQ.get(selected_province_domain_of_name, 'text', 'province', p, 'domain_of.name');
-                RQ.get(selected_province_domain_of_holder_player_armory, 'division', 'province', p, 'domain_of.holder.player.armory.division');
-                RQ.get(selected_province_domain_of_holder_player_armory, 'tinctures', 'province', p, 'domain_of.holder.player.armory.tinctures', true);
-                RQ.getStatus(declare_war_button, 'status', 'declare_war', p)
-                RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p)
-                RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
-            }
-        }
-
-        function updateTopBar()
-        {
-
-        }
-
-        function updatePeaceBar()
-        {
-            if (root.leftMenu.peaceBar.visible)
-            {
-                RQ.getAll(person, 'person', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
-            }
-        }
 
         Component.onCompleted:
         {
@@ -180,7 +144,7 @@ Item {
                     else
                     {
                         root.provinceSelected = p;
-                        map.updateInfoBar();
+                        root.updateInfoBar();
                         map.armySprite.unselectAll();
                     }
                 }
@@ -322,6 +286,64 @@ Item {
     property int sizeBorder: 15
     property string colorFont: "#ff101010"
     property string colorFontDisabled: "#ff606060"
+
+    QtObject {
+        id: personProvince
+        property string name
+        property int number
+        property string title
+        property int level
+        property int id
+        onNameChanged: update();
+        onNumberChanged: update();
+        onTitleChanged: update();
+        onLevelChanged: update();
+        function update()
+        {
+            selected_person.text = name + ' ' + FC.a2r(number) + ' ' + FC.l2t(level) + ' of ' + title
+        }
+    }
+
+    QtObject {
+        id: clock
+        property int tick
+        onTickChanged:{
+            RQ.getUpdate(clock, 'tick', tick+1);
+            map.updateMap();
+            root.updateInfoBar();
+        }
+    }
+
+
+    function updateInfoBar()
+    {
+        if (root.provinceSelected){
+            var p = root.provinceSelected;
+            RQ.get(selected_province_name, 'text', 'province',  p, 'name');
+            RQ.get(selected_province_domain_of_holder_name, 'text', 'province', p, 'domain_of.holder.name');
+            RQ.get(selected_province_domain_of_name, 'text', 'province', p, 'domain_of.name');
+            //RQ.get(selected_province_domain_of_holder_player_armory, 'division', 'province', p, 'domain_of.holder.player.armory.division');
+            //RQ.get(selected_province_domain_of_holder_player_armory, 'tinctures', 'province', p, 'domain_of.holder.player.armory.tinctures', 'domain_of.holder.player.armory.tinctures');
+            RQ.get(selected_province_domain_of_holder_player_armory, 'division;tinctures', 'province', p, 'domain_of.holder.player.armory.division;domain_of.holder.player.armory.tinctures', 'domain_of.holder.player.armory.tinctures');
+            RQ.getStatus(declare_war_button, 'status', 'declare_war', p)
+            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p)
+            RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
+        }
+    }
+
+    function updateTopBar()
+    {
+
+    }
+
+    function updatePeaceBar()
+    {
+        if (root.leftMenu.peaceBar.visible)
+        {
+            RQ.getAll(person, 'person', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
+        }
+    }
+
 
     /*Connections {
         target: notifications
@@ -499,7 +521,7 @@ Item {
                     id: selected_province_domain_of_holder_player_armory
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: selected_person.text = selected_province_domain_of_holder_name.text
+                        onClicked: RQ.getInFunction(personProvince, 'name;number;title;level;res', 'player_person_title', provinceSelected)
                     }
                 }
 
@@ -546,7 +568,7 @@ Item {
                     sourceImage: 'gfx/gui/war.png'
                     onClicked:{
                         if (status === 'normal')
-                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected);
+                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, personProvince.id);
                     }
                 }
                 Comp.IconButton{

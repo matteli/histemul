@@ -32,6 +32,7 @@ class Player(Document):
 
     name = StringField(primary_key=True)
     armory = ReferenceField('Armory')
+    leader = ReferenceField('Person')
 
     @property
     def controlled(self):

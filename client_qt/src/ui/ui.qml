@@ -75,15 +75,16 @@ Item {
         {
             for (var i in armyFile)
                 armyFile[i] = false;
-            RQ.getAll(army, 'army', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
-            RQ.getAll(army, 'army', 'for_the.player', 'all', 'army_for_the');
-            RQ.getAll(province, 'province', 'population;siege;morale', 'all', 'province_others_parameters');
+            RQ.getAll(army, 'army', ['knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters');
+            RQ.getAll(army, 'army', ['for_the.player'], 'all', 'army_for_the');
+            RQ.getAll(province, 'province', ['population', 'siege', 'morale'], 'all', 'province_others_parameters');
         }
 
 
         Component.onCompleted:
         {
-            RQ.getAll(province, 'province', 'army_x;army_y;city_x;city_y;land', 'all', 'province_fixed_parameters');
+            RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters');
+            RQ.getInFunction(personProvince, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'leader'})
         }
 
         onFilesReceived:
@@ -131,7 +132,7 @@ Item {
                 {
                     var armies = map.armySprite.getSelected();
                     for (var i in armies)
-                        RQ.postMsg(map.armySprite.get( armies[i]), 'way', 'move_troops', armies[i], parent.hitID(mouse.x,mouse.y));
+                        RQ.postMsg(map.armySprite.get(armies[i]), 'way', 'move_troops', armies[i], {'to': parent.hitID(mouse.x,mouse.y)});
                 }
                 else
                 {
@@ -319,14 +320,12 @@ Item {
     {
         if (root.provinceSelected){
             var p = root.provinceSelected;
-            RQ.get(selected_province_name, 'text', 'province',  p, 'name');
-            RQ.get(selected_province_domain_of_holder_name, 'text', 'province', p, 'domain_of.holder.name');
-            RQ.get(selected_province_domain_of_name, 'text', 'province', p, 'domain_of.name');
-            //RQ.get(selected_province_domain_of_holder_player_armory, 'division', 'province', p, 'domain_of.holder.player.armory.division');
-            //RQ.get(selected_province_domain_of_holder_player_armory, 'tinctures', 'province', p, 'domain_of.holder.player.armory.tinctures', 'domain_of.holder.player.armory.tinctures');
-            RQ.get(selected_province_domain_of_holder_player_armory, 'division;tinctures', 'province', p, 'domain_of.holder.player.armory.division;domain_of.holder.player.armory.tinctures', 'domain_of.holder.player.armory.tinctures');
-            RQ.getStatus(declare_war_button, 'status', 'declare_war', p)
-            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p)
+            RQ.get(selected_province_name, ['text'], 'province',  p, ['name']);
+            RQ.get(selected_province_domain_of_holder_name, ['text'], 'province', p, ['domain_of.holder.name']);
+            RQ.get(selected_province_domain_of_name, ['text'], 'province', p, ['domain_of.name']);
+            RQ.get(selected_province_domain_of_holder_player_armory, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.armory.division', 'domain_of.holder.player.armory.tinctures'], ['domain_of.holder.player.armory.tinctures']);
+            RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': personProvince.id})
+            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': personProvince.id})
             RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
         }
     }
@@ -340,7 +339,7 @@ Item {
     {
         if (root.leftMenu.peaceBar.visible)
         {
-            RQ.getAll(person, 'person', 'knights;location;attitude;morale;way;next_province', 'all', 'army_parameters');
+            RQ.getAll(person, 'person', ['knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters');
         }
     }
 
@@ -521,7 +520,7 @@ Item {
                     id: selected_province_domain_of_holder_player_armory
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: RQ.getInFunction(personProvince, 'name;number;title;level;res', 'player_person_title', provinceSelected)
+                        onClicked: RQ.getInFunction(personProvince, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'domain_of.holder': provinceSelected})
                     }
                 }
 
@@ -568,7 +567,7 @@ Item {
                     sourceImage: 'gfx/gui/war.png'
                     onClicked:{
                         if (status === 'normal')
-                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, personProvince.id);
+                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, {'from': personProvince.id});
                     }
                 }
                 Comp.IconButton{

@@ -72,14 +72,14 @@ def requesting():
         print (type)
 
         if type == 'get' or type == 'get_all':
-            cls = request.form['cls']
-            atts = request.form['atts'].split(';')
-            idd = request.form['id']
+            cls = requestjs['cls']
+            atts = requestjs['atts']
+            idd = requestjs['id']
 
-            try:
+            '''try:
                 idd = int(idd)
             except:
-                pass
+                pass'''
             return jsonify(engine.model.get_in_model(type, player, cls, atts, idd))
 
         elif type == 'get_status' or type == 'post_msg':
@@ -92,31 +92,26 @@ def requesting():
                     response[prop] = 'rejected'
 
             msg = requestjs['msg']
-            '''try:
-                idd = [int(i) for i in (requestjs['id'].split(';'))]
-            except ValueError:
-                idd = requestjs['id'].split(';')'''
+            opt = requestjs['opt']
+            print(opt)
             idd = requestjs['id']
-            opt = requestjs['opt'].split(';')
-            #for i in idd:
-            i = idd
-            if player in engine.model.orders and engine.model.orders[player] and (msg, i) in engine.model.orders[player][0]:
+            if player in engine.model.orders and engine.model.orders[player] and (msg, idd) in engine.model.orders[player][0]:
                 if type == 'get_status':
                     response[prop] = 'accepted'
                 else:
                     response[prop] = 'rejected'
             else:
                 if type == 'get_status':
-                    result = engine.model.make_orders(player, msg, i, opt, 'test')
+                    result = engine.model.make_orders(player, msg, idd, opt, 'test')
                 else:
-                    result = engine.model.make_orders(player, msg, i, opt, 'order')
+                    result = engine.model.make_orders(player, msg, idd, opt, 'order')
                 response[prop] = result
             return jsonify(response)
 
         elif type == 'get_update':
             response = {}
             prop = requestjs['prop']
-            num = int(requestjs['num'])
+            num = requestjs['num']
             if num == 0:
                 engine.update_flag_global.wait()
             else:
@@ -128,7 +123,7 @@ def requesting():
         elif type == 'get_in_function':
             response = {}
             func = requestjs['func']
-            arg = requestjs['arg']
+            opts = requestjs['opts']
             if func=='player_person_title':
-                response = engine.model.get_player_person_title(player, arg)
+                response = engine.model.get_player_person_title(player, opts)
             return jsonify(response)            

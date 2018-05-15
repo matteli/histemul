@@ -176,19 +176,25 @@ void Map::calculateCoordinate()
 
 void Map::updateDataProvince()
 {
-    QUrlQuery postData;
+    /*QUrlQuery postData;
     postData.addQueryItem("type", "get_all");
     postData.addQueryItem("player", mPlayer);
     postData.addQueryItem("cls", "province");
     postData.addQueryItem("id", "all");
-    postData.addQueryItem("atts", fill() + ".color");
+    postData.addQueryItem("atts", fill() + ".color");*/
+    QJsonObject postData;
+    postData.insert("type", "get_all");
+    postData.insert("player", mPlayer);
+    postData.insert("cls", "province");
+    postData.insert("id", "all");
+    postData.insert("atts", QJsonArray({fill() + ".color"}));
 
 
     QNetworkRequest request(mUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-        "application/x-www-form-urlencoded");
-    //QNetworkReply *reply =
-    mManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
+    //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    //mManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
+    mManager->post(request, QJsonDocument(postData).toJson());
 }
 
 void Map::slotProvinceUpdateReply(QNetworkReply* reply)

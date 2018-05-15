@@ -119,13 +119,13 @@ class Model():
             result = self.rally_troops(Player.objects.get(pk=player), Province.objects.get(pk=idd), status)
 
         elif msg == 'move_troops':
-            result = self.move_troops(Player.objects.get(pk=player), Army.objects.get(pk=idd), Province.objects.get(pk=int(opt[0])), status)
+            result = self.move_troops(Player.objects.get(pk=player), Army.objects.get(pk=idd), Province.objects.get(pk=opt['to']), status)
 
         elif msg == 'declare_war':
-            result = self.declare_war(Person.objects.get(pk=int(opt[0])), Province.objects.get(pk=idd).domain_of.holder, status)
+            result = self.declare_war(Person.objects.get(pk=opt['from']), Province.objects.get(pk=idd).domain_of.holder, status)
 
         elif msg == 'propose_peace':
-            result = self.propose_peace(Person.objects.get(pk=int(opt[0])), Province.objects.get(pk=idd).domain_of.holder, opt[1:], status)
+            result = self.propose_peace(Person.objects.get(pk=opt['from']), Province.objects.get(pk=idd).domain_of.holder, opt, status)
 
         if result == 'accepted' and status=='order':
             if player not in self.orders:
@@ -499,18 +499,28 @@ class Model():
         #print (t1-t0)
         return res
 
-    def get_player_person_title(self, player, arg):
+    def get_player_person_title(self, player, opts):
         try:
-            province = Province.objects.get(pk=arg).select_related(3)
             player = Player.objects.get(pk=player)
         except:
-            return {'res': 0}
-        if province.domain_of.holder.player != player:
-            return {'res': 0}
+            return {}
         
+        if opts['type'] == 'leader':
+            person = player.leader
+        elif opts['type'] == 'province':
+            try:
+                province = Province.objects.get(pk=opts['domain_of.holder']).select_related(3)
+            except:
+                return {}
+            if province.domain_of.holder.player != player:
+                return {}
+            person = province.domain_of.holder
+        else:
+            return {}
+
         response = {}
-        response['name'] = province.domain_of.holder.name
-        titles = Title.objects.filter(holder=province.domain_of.holder)
+        response['name'] = person.name
+        titles = Title.objects.filter(holder=person)
         level = 0
         title = None
         for t in titles:
@@ -520,8 +530,6 @@ class Model():
         
         response['title'] = title.name
         response['level'] = title.level
-        response['number'] = title.name_number[province.domain_of.holder.name]
-        response['res'] = province.domain_of.holder.id
+        response['number'] = title.name_number[person.name]
+        response['id'] = person.id
         return response
-
-

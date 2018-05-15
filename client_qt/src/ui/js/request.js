@@ -17,7 +17,8 @@ function getUpdate(item, prop, num){
 
 function postMsg(item, prop, msg, idd, opt)
 {
-    var option = (typeof opt !== 'undefined') ? opt : ';';
+    var option = (typeof opt !== 'undefined') ? opt : '{}';
+    console.log(option)
     //var http_params = serialize({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     var http_params = JSON.stringify({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     send(item, prop, http_params);
@@ -27,7 +28,11 @@ function postMsg(item, prop, msg, idd, opt)
 
 function getStatus(item, prop, msg, idd, opt)
 {
-    var option = (typeof opt !== 'undefined') ? opt : ';';
+    console.log(opt)
+
+    var option = (typeof opt !== 'undefined') ? opt : '{}';
+    console.log(option)
+
     //var http_params = serialize({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     var http_params = JSON.stringify({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     send(item, prop, http_params);
@@ -47,10 +52,14 @@ function send(item, props, http_params)
             if(http.readyState == 4 && http.status == 200) {
                 console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
-                var prop = props.split(';');
-                for (var p in prop)
+                if (!Array.isArray(props))
+                    item[props] = res[props];
+                else
                 {
-                    item[prop[p]] = res[prop[p]];
+                    for (var p in props)
+                    {
+                        item[props[p]] = res[props[p]];
+                    }
                 }
             }
         }
@@ -63,10 +72,10 @@ function send(item, props, http_params)
     http.send(http_params);
 }
 
-function getInFunction(item, props, func, arg)
+function getInFunction(item, props, func, opts)
 {
     //var http_params = serialize({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'arg': arg});
-    var http_params = JSON.stringify({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'arg': arg});
+    var http_params = JSON.stringify({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'opts': opts});
     send(item, props, http_params);
 }
 
@@ -78,37 +87,35 @@ function get(item, props, cls, id, atts, tabs, cache)
         item[props] = cache[cls][id][atts];
     }
     else {*/
-        var http_params = serialize({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
+        //var http_params = serialize({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
+        var http_params = JSON.stringify({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http = new XMLHttpRequest();
         //console.info("dd");
         http.open("POST", url, true);
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.setRequestHeader("Content-type", "application/json");
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
                 //console.info(http.responseText);
-                var prop = props.split(';');
-                var att = atts.split(';');
-                if (tabs)
-                    var tab = tabs.split(';');
                 var res = JSON.parse(http.responseText);
-                for (var i in att)
+                for (var i in atts)
                 {
                     var tab_bool = false;
-                    for (var j in tab)
+                    for (var j in tabs)
                     {
-                        if (tab[j] == att[i])
+                        if (tabs[j] == atts[i])
                         {
-                            item[prop[i]] = res[att[i]];
+                            item[props[i]] = res[atts[i]];
                             tab_bool = true;
                             break;
                         }
                     }
                     if (!tab_bool)
                     {
-                        if (res[att[i]][0])
-                            item[prop[i]] = res[att[i]][0];
+                        if (res[atts[i]][0])
+                            item[props[i]] = res[atts[i]][0];
                         else
-                            item[prop[i]] = 'Undefined';
+                            item[props[i]] = 'Undefined';
                     }
                 }
 
@@ -133,7 +140,7 @@ function get(item, props, cls, id, atts, tabs, cache)
     //}
 }
 
-function getAll(item, cls, atts, id, iden)
+function getAll(item, cls, atts, id, sig)
 {
 
     /*if ((cls in cache) && (id in  cache[cls]) && (prop in cache[cls][id])) {
@@ -141,16 +148,18 @@ function getAll(item, cls, atts, id, iden)
         idLocal[prop] = cache[cls][id][prop];
     }
     else {*/
-        var http_params = serialize({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
+        //var http_params = serialize({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
+        var http_params = JSON.stringify({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http = new XMLHttpRequest();
         //console.info(url);
         http.open("POST", url, true);
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.setRequestHeader("Content-type", "application/json");
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
                 //console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
-                var ps = atts.split(";");
+                //var ps = atts.split(";");
                 for (var r in res) {
                     var idd;
                     if (typeof res[r]['_id'] == 'object')
@@ -168,7 +177,7 @@ function getAll(item, cls, atts, id, iden)
 
                     //item[idd] = res[r];
                 }
-                map.filesReceived(iden);
+                map.filesReceived(sig);
                 //console.info(item);
 
                 /*if (!(cls in cache)) cache[cls] = {};

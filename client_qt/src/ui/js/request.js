@@ -1,16 +1,6 @@
 var cache = {};
 
-function serialize (obj) {
-  var str = [];
-  for(var p in obj)
-    if (obj.hasOwnProperty(p)) {
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-    }
-  return str.join("&");
-}
-
 function getUpdate(item, prop, num){
-    //var http_params = serialize({'type': 'get_update', 'player': player, 'prop': prop, 'num': num});
     var http_params = JSON.stringify({'type': 'get_update', 'player': player, 'prop': prop, 'num': num});
     send(item, prop, http_params);
 }
@@ -19,7 +9,6 @@ function postMsg(item, prop, msg, idd, opt)
 {
     var option = (typeof opt !== 'undefined') ? opt : '{}';
     console.log(option)
-    //var http_params = serialize({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     var http_params = JSON.stringify({'type': 'post_msg', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     send(item, prop, http_params);
     console.log("post " + msg)
@@ -28,12 +17,7 @@ function postMsg(item, prop, msg, idd, opt)
 
 function getStatus(item, prop, msg, idd, opt)
 {
-    console.log(opt)
-
     var option = (typeof opt !== 'undefined') ? opt : '{}';
-    console.log(option)
-
-    //var http_params = serialize({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     var http_params = JSON.stringify({'type': 'get_status', 'player': player, 'prop': prop, 'msg': msg, 'id': idd, 'opt': option});
     send(item, prop, http_params);
 }
@@ -74,7 +58,6 @@ function send(item, props, http_params)
 
 function getInFunction(item, props, func, opts)
 {
-    //var http_params = serialize({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'arg': arg});
     var http_params = JSON.stringify({'type': 'get_in_function', 'player': player, 'props': props, 'func': func, 'opts': opts});
     send(item, props, http_params);
 }
@@ -87,12 +70,9 @@ function get(item, props, cls, id, atts, tabs, cache)
         item[props] = cache[cls][id][atts];
     }
     else {*/
-        //var http_params = serialize({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http_params = JSON.stringify({'type': 'get', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http = new XMLHttpRequest();
-        //console.info("dd");
         http.open("POST", url, true);
-        //http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         http.setRequestHeader("Content-type", "application/json");
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {
@@ -148,12 +128,10 @@ function getAll(item, cls, atts, id, sig)
         idLocal[prop] = cache[cls][id][prop];
     }
     else {*/
-        //var http_params = serialize({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http_params = JSON.stringify({'type': 'get_all', 'player': player, 'cls': cls, 'id': id, 'atts': atts});
         var http = new XMLHttpRequest();
         //console.info(url);
         http.open("POST", url, true);
-        //http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         http.setRequestHeader("Content-type", "application/json");
         http.onreadystatechange = function() {
             if(http.readyState == 4 && http.status == 200) {

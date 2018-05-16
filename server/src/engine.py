@@ -67,10 +67,9 @@ class Engine(threading.Thread):
             self.model.update(self.date)
             self.tick += 1
             self.date += self.day
-
+            print("Finish Update")
             self.update_flag_global.set()
             if self.tick%2:
                 self.update_flag_tick[1].set()
             else:
                 self.update_flag_tick[0].set()
-            print("Finish Update")

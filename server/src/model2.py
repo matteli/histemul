@@ -38,7 +38,6 @@ from mongoengine import connect, QuerySet
 import random
 
 
-#class Model(dict):
 class Model():
     def __init__(self):
         connect('histemul')
@@ -382,7 +381,6 @@ class Model():
                 response.append(ins)
 
     def get_in_model(self, type, player, cls, atts, idd):
-        #if not isinstance(idd, int) or idd >= 0:
         if type == 'get':
             response = {}
             for att in atts:
@@ -415,10 +413,11 @@ class Model():
             result_non_union = []
             result_union = []
             if att_no_union:
-                result_non_union = self.list_qset_atts(qset, atts)
+                result_non_union = self.list_qset_atts(qset, att_no_union)
             if att_union:
-                result_union = self.list_qset_atts_2(qset, atts)
+                result_union = self.list_qset_atts_2(qset, att_union)
 
+            print(result_union)
             return result_non_union + result_union
        
     def list_list_att(self, lis, att):
@@ -455,44 +454,61 @@ class Model():
 
     def list_qset_atts_2(self, qset, atts):
         #att = atts[0].split('.')
-        att_base = atts[0].split('.')[0]
-        at = getattr(qset._document, att_base)
-        fr = at.document_type._class_name.lower()
-        af = {}
-        pj = {}
 
-        for att in atts:
-            at = att.split('.')
-            af[att] = {'$arrayElemAt': ['$object.' + at[1], 0]}
-            pj[att] = True
-        
-        pipeline = [
-            {
-                '$lookup':
+        print(atts)
+        attributs = atts[0].split('.')
+        final_property = attributs.pop()
+        cls = []
+        for q in qset:
+            ok = True
+            for a in attributs:
+                q = getattr(q, a)
+                if q:
+                    cls.append(q._cls.lower())
+                else:
+                    ok = False
+                    break
+            if ok: 
+                break
+
+        pipeline = []
+        b = ''
+        for index, a in enumerate(attributs):
+            pipeline.append(
+                {
+                    '$lookup':
                     {
-                        'from': fr,
-                        'localField': att_base,
+                        'from': cls[index],
+                        'localField': b + a,
                         'foreignField': '_id',
-                        'as': 'object'
+                        'as': a
                     }
-            },
-
+                }                
+            )
+            b = a + '.'
+            pipeline.append(
+                {
+                    '$unwind': '$'+a
+                }
+            )
+        pipeline.append(
             {
-                '$addFields':
-                    af
-                    #{
-                    #    atts[0]: {'$arrayElemAt': ['$object.' + att[1], 0]},
-                    #}
-            },
-
-            {
-                '$project':
-                    pj
-                    #{
-                    #    atts[0]: True
-                    #}
+                '$addFields': 
+                {
+                    atts[0]: '$'+a+'.'+final_property
+                }
             }
-        ]
+        )
+        pipeline.append(
+            {
+                '$project': 
+                {
+                    atts[0]: True
+                }
+            }
+        )
+        print (pipeline)
+
         #t0 = time.perf_counter()
         res = list(qset.aggregate(*pipeline))
         #t1 = time.perf_counter()
@@ -509,11 +525,11 @@ class Model():
             person = player.leader
         elif opts['type'] == 'province':
             try:
-                province = Province.objects.get(pk=opts['domain_of.holder']).select_related(3)
+                province = Province.objects.get(pk=opts['province']).select_related(3)
             except:
                 return {}
-            if province.domain_of.holder.player != player:
-                return {}
+            '''if province.domain_of.holder.player != player:
+                return {}'''
             person = province.domain_of.holder
         else:
             return {}

@@ -42,7 +42,9 @@ Item {
     Map {
         id: map
         objectName: "map"
-        fill: "land"
+        //fill: "land.color"
+        fill: "domain_of.holder.player.armory.tinctures"
+        //.player.armory.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
         PropertyAnimation on t { to: 100; loops: Animation.Infinite }
@@ -84,7 +86,7 @@ Item {
         Component.onCompleted:
         {
             RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters');
-            RQ.getInFunction(personProvince, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'leader'})
+            RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'leader'})
         }
 
         onFilesReceived:
@@ -289,7 +291,7 @@ Item {
     property string colorFontDisabled: "#ff606060"
 
     QtObject {
-        id: personProvince
+        id: selectedPerson
         property string name
         property int number
         property string title
@@ -306,6 +308,24 @@ Item {
     }
 
     QtObject {
+        id: selectedProvincePerson
+        property string name
+        property int number
+        property string title
+        property int level
+        property int id
+        onNameChanged: update();
+        onNumberChanged: update();
+        onTitleChanged: update();
+        onLevelChanged: update();
+        function update()
+        {
+            selected_province_person.text = name + ' ' + FC.a2r(number) + ' ' + FC.l2t(level) + ' of ' + title
+        }
+    }
+
+
+    QtObject {
         id: clock
         property int tick
         onTickChanged:{
@@ -320,12 +340,13 @@ Item {
     {
         if (root.provinceSelected){
             var p = root.provinceSelected;
+            RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'province': p});
             RQ.get(selected_province_name, ['text'], 'province',  p, ['name']);
             RQ.get(selected_province_domain_of_holder_name, ['text'], 'province', p, ['domain_of.holder.name']);
             RQ.get(selected_province_domain_of_name, ['text'], 'province', p, ['domain_of.name']);
             RQ.get(selected_province_domain_of_holder_player_armory, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.armory.division', 'domain_of.holder.player.armory.tinctures'], ['domain_of.holder.player.armory.tinctures']);
-            RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': personProvince.id})
-            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': personProvince.id})
+            RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': selectedPerson.id})
+            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': selectedPerson.id})
             RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
         }
     }
@@ -455,11 +476,8 @@ Item {
                 NumberAnimation { properties: "x"; easing.type: Easing.OutExpo; duration: 500 }
             }
 
-        //anchors.margins: sizeBorder
         width: 300
         x: -width
-        //y: sizeBorder
-        //height: parent.height - 2*sizeBorder
         anchors.top: topMenu.bottom
         anchors.bottom: parent.bottom
 
@@ -520,11 +538,26 @@ Item {
                     id: selected_province_domain_of_holder_player_armory
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: RQ.getInFunction(personProvince, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'domain_of.holder': provinceSelected})
+                        onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'domain_of.holder': provinceSelected})
                     }
                 }
 
             }
+
+            Text
+            {
+                id: selected_province_person
+                text: ""
+                renderType: Text.NativeRendering
+                wrapMode: Text.Wrap
+                width: leftMenu.width
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 16
+                font.family: "Linux Biolinum"
+                font.bold: true
+                color: colorFont
+            }
+
 
             Text
             {

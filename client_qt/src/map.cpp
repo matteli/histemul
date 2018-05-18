@@ -187,7 +187,8 @@ void Map::updateDataProvince()
     postData.insert("player", mPlayer);
     postData.insert("cls", "province");
     postData.insert("id", "all");
-    postData.insert("atts", QJsonArray({fill() + ".color"}));
+    //postData.insert("atts", QJsonArray({fill() + ".color"}));
+    postData.insert("atts", QJsonArray({fill()}));
 
 
     QNetworkRequest request(mUrl);
@@ -203,15 +204,40 @@ void Map::slotProvinceUpdateReply(QNetworkReply* reply)
     {
        QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
        QJsonArray json_array = jsonResponse.array();
-       QString f = fill();
+       QStringList f = fill().split('.');
        foreach (const QJsonValue & value, json_array){
-           QJsonObject obj = value.toObject();
-           if (obj.contains(f) && obj[f].toObject().contains("color"))
-               mProColor.at(obj["_id"].toInt()) = obj[f].toObject()["color"].toString();
-           else
-               mProColor.at(obj["_id"].toInt()) = "black";
-       }
-       mNext = All;
+            QJsonObject obj = value.toObject();
+            int id = obj["_id"].toInt();
+            QJsonArray val;
+            for (int i = 0; i < f.size(); ++i)
+            {
+                if (obj.contains(f.at(i)))
+                {
+                    if (obj[f.at(i)].isObject())
+                        obj = obj[f.at(i)].toObject();
+                    else if (obj[f.at(i)].isArray())
+                        mProColor.at(id) = obj[f.at(i)].toArray().at(0).toString();
+                    else
+                        mProColor.at(id) = obj[f.at(i)].toString();
+                }
+                else
+                {
+                    //mProColor.at(obj["_id"].toInt()) = "black";
+                    mProColor.at(id) = "black";
+                    break;
+                }
+            }
+            //mProColor.at(obj["_id"].toInt()) = val.at(0).toString();
+            //mProColor.at(id) = val.at(0).toString();
+
+
+            /*if (obj.contains(f) && obj[f].toObject().contains("color"))
+               //mProColor.at(obj["_id"].toInt()) = obj[f].toObject()["color"].toString();
+                mProColor.at(obj["_id"].toInt()) = obj[f].toObject()["color"].toArray().at(0).toString();
+            else
+                mProColor.at(obj["_id"].toInt()) = "black";*/
+        }
+        mNext = All;
     }
     delete reply;
 }

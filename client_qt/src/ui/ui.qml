@@ -42,9 +42,8 @@ Item {
     Map {
         id: map
         objectName: "map"
-        //fill: "land.color"
-        fill: "domain_of.holder.player.armory.tinctures"
-        //.player.armory.tinctures"
+        fill: "land.color"
+        //fill: "domain_of.holder.player.armory.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
         PropertyAnimation on t { to: 100; loops: Animation.Infinite }
@@ -303,7 +302,7 @@ Item {
         onLevelChanged: update();
         function update()
         {
-            selected_person.text = name + ' ' + FC.a2r(number) + ' ' + FC.l2t(level) + ' of ' + title
+            selected_person.text = name + ' ' + FC.a2r(number) + ' of ' + title
         }
     }
 
@@ -320,7 +319,7 @@ Item {
         onLevelChanged: update();
         function update()
         {
-            selected_province_person.text = name + ' ' + FC.a2r(number) + ' ' + FC.l2t(level) + ' of ' + title
+            selected_province_person.text = name + ' ' + FC.a2r(number) + ' of ' + title
         }
     }
 
@@ -342,8 +341,6 @@ Item {
             var p = root.provinceSelected;
             RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'province': p});
             RQ.get(selected_province_name, ['text'], 'province',  p, ['name']);
-            RQ.get(selected_province_domain_of_holder_name, ['text'], 'province', p, ['domain_of.holder.name']);
-            RQ.get(selected_province_domain_of_name, ['text'], 'province', p, ['domain_of.name']);
             RQ.get(selected_province_domain_of_holder_player_armory, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.armory.division', 'domain_of.holder.player.armory.tinctures'], ['domain_of.holder.player.armory.tinctures']);
             RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': selectedPerson.id})
             RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': selectedPerson.id})
@@ -548,35 +545,6 @@ Item {
             {
                 id: selected_province_person
                 text: ""
-                renderType: Text.NativeRendering
-                wrapMode: Text.Wrap
-                width: leftMenu.width
-                horizontalAlignment: Text.AlignHCenter
-                font.pointSize: 16
-                font.family: "Linux Biolinum"
-                font.bold: true
-                color: colorFont
-            }
-
-
-            Text
-            {
-                id: selected_province_domain_of_holder_name
-                text: "Holder"
-                renderType: Text.NativeRendering
-                wrapMode: Text.Wrap
-                width: leftMenu.width
-                horizontalAlignment: Text.AlignHCenter
-                font.pointSize: 24
-                font.family: "Linux Biolinum"
-                font.bold: true
-                color: colorFont
-            }
-
-            Text
-            {
-                id: selected_province_domain_of_name
-                text: "Title"
                 renderType: Text.NativeRendering
                 wrapMode: Text.Wrap
                 width: leftMenu.width

@@ -36,10 +36,22 @@ from war import War
 from armory import Armory
 from mongoengine import connect, QuerySet
 import random
+import time
 
 
 class Model():
     def __init__(self):
+        self.model = {
+            'army': Army,
+            'battle': Battle,
+            'culture': Culture,
+            'land': Land,
+            'person': Person,
+            'province': Province,
+            'title': Title,
+            'war': War,
+            'armory': Armory
+        }
         connect('histemul')
         self.orders = {}
 
@@ -338,29 +350,6 @@ class Model():
                             adja.f = adja.g + (abs(end.army_x-adja.army_x)+abs(end.army_y-adja.army_y))/100
         return []
 
-    def get_cls(self, cls):
-        if cls == 'army':
-            return Army
-        if cls == 'battle':
-            return Battle
-        if cls == 'culture':
-            return Culture
-        if cls == 'land':
-            return Land
-        if cls == 'person':
-            return Person
-        if cls == 'player':
-            return Player
-        if cls == 'province':
-            return Province
-        if cls == 'title':
-            return Title
-        if cls == 'war':
-            return War
-        if cls == 'armory':
-            return Armory
-        return None
-
     def get_instances(self, instance, pro_tab, i_pro_tab, response):
         try:
             ins = getattr(instance, pro_tab[i_pro_tab])
@@ -387,7 +376,8 @@ class Model():
                 response[att] = []
                 att_tab = att.split('.')
                 try:
-                    instance = self.get_cls(cls).objects.filter(pk=idd).first()
+                    #instance = self.get_cls(cls).objects.filter(pk=idd).first()
+                    instance = self.model[cls].objects.filter(pk=idd).first()
                     self.get_instances(instance, att_tab, 0, response[att])
 
                     '''for p in pro_tab:
@@ -400,25 +390,26 @@ class Model():
             
         elif type == 'get_all':
             if (idd == 'all'):
-                qset = self.get_cls(cls).objects
+                #qset = self.get_cls(cls).objects
+                qset = self.model[cls].objects
 
-            att_no_union = []
-            att_union = []
+            att_no_join = []
+            att_join = []
             for att in atts:
                 if att.count('.'):
-                    att_union.append(att)
+                    att_join.append(att)
                 else:
-                    att_no_union.append(att)
+                    att_no_join.append(att)
 
-            result_non_union = []
-            result_union = []
-            if att_no_union:
-                result_non_union = self.list_qset_atts(qset, att_no_union)
-            if att_union:
-                result_union = self.list_qset_atts_2(qset, att_union)
+            result_non_join = []
+            result_join = []
+            if att_no_join:
+                result_non_join = self.list_qset_atts(qset, att_no_join)
+            if att_join:
+                result_join = self.list_qset_atts_2(qset, att_join)
 
-            print(result_union)
-            return result_non_union + result_union
+            print(result_join)
+            return result_non_join + result_join
        
     def list_list_att(self, lis, att):
         result = []
@@ -454,22 +445,14 @@ class Model():
 
     def list_qset_atts_2(self, qset, atts):
         #att = atts[0].split('.')
-
-        print(atts)
+        t0 = time.perf_counter()
         attributs = atts[0].split('.')
         final_property = attributs.pop()
         cls = []
-        for q in qset:
-            ok = True
-            for a in attributs:
-                q = getattr(q, a)
-                if q:
-                    cls.append(q._cls.lower())
-                else:
-                    ok = False
-                    break
-            if ok: 
-                break
+        q = qset[0]._cls.lower()
+        for a in attributs:
+            q = getattr(self.model[q], a).document_type._class_name.lower()
+            cls.append(q)
 
         pipeline = []
         b = ''
@@ -509,10 +492,9 @@ class Model():
         )
         print (pipeline)
 
-        #t0 = time.perf_counter()
         res = list(qset.aggregate(*pipeline))
-        #t1 = time.perf_counter()
-        #print (t1-t0)
+        t1 = time.perf_counter()
+        print (t1-t0)
         return res
 
     def get_player_person_title(self, player, opts):
@@ -528,8 +510,6 @@ class Model():
                 province = Province.objects.get(pk=opts['province']).select_related(3)
             except:
                 return {}
-            '''if province.domain_of.holder.player != player:
-                return {}'''
             person = province.domain_of.holder
         else:
             return {}

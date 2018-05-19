@@ -160,41 +160,17 @@ void Map::calculateCoordinate()
     return;
 }
 
-/*void Map::init(Model &model, unsigned int width, unsigned int height)
-{
-    initSize(width, height);
-    //mModel = &model;
-    changeFill();
-    qRegisterMetaType<QSet16>("QSet16");
-    //connect(mModel, &Model::provinceModelChanged, this, &Map::slotProvinceModelChanged);
-    //connect(mModel, &Model::provinceFillModelChanged, this, &Map::slotProvinceFillModelChanged);
-    //connect(mModel, &Model::armyModelChanged, this, &Map::slotArmyModelChanged);
-    connect(this,&Map::visibleProvinceChanged, this, &Map::slotProvinceModelChanged);
-
-    return;
-}*/
-
 void Map::updateDataProvince()
 {
-    /*QUrlQuery postData;
-    postData.addQueryItem("type", "get_all");
-    postData.addQueryItem("player", mPlayer);
-    postData.addQueryItem("cls", "province");
-    postData.addQueryItem("id", "all");
-    postData.addQueryItem("atts", fill() + ".color");*/
     QJsonObject postData;
     postData.insert("type", "get_all");
     postData.insert("player", mPlayer);
     postData.insert("cls", "province");
     postData.insert("id", "all");
-    //postData.insert("atts", QJsonArray({fill() + ".color"}));
     postData.insert("atts", QJsonArray({fill()}));
 
-
     QNetworkRequest request(mUrl);
-    //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    //mManager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
     mManager->post(request, QJsonDocument(postData).toJson());
 }
 
@@ -208,7 +184,6 @@ void Map::slotProvinceUpdateReply(QNetworkReply* reply)
        foreach (const QJsonValue & value, json_array){
             QJsonObject obj = value.toObject();
             int id = obj["_id"].toInt();
-            QJsonArray val;
             for (int i = 0; i < f.size(); ++i)
             {
                 if (obj.contains(f.at(i)))
@@ -222,27 +197,15 @@ void Map::slotProvinceUpdateReply(QNetworkReply* reply)
                 }
                 else
                 {
-                    //mProColor.at(obj["_id"].toInt()) = "black";
                     mProColor.at(id) = "black";
                     break;
                 }
             }
-            //mProColor.at(obj["_id"].toInt()) = val.at(0).toString();
-            //mProColor.at(id) = val.at(0).toString();
-
-
-            /*if (obj.contains(f) && obj[f].toObject().contains("color"))
-               //mProColor.at(obj["_id"].toInt()) = obj[f].toObject()["color"].toString();
-                mProColor.at(obj["_id"].toInt()) = obj[f].toObject()["color"].toArray().at(0).toString();
-            else
-                mProColor.at(obj["_id"].toInt()) = "black";*/
         }
         mNext = All;
     }
     delete reply;
 }
-
-
 
 void Map::initSize(unsigned int width, unsigned int height)
 {
@@ -278,7 +241,6 @@ void Map::initSize(unsigned int width, unsigned int height)
     mMatrix.ortho(QRect(0, 0,mWidth, mHeight));
     calculateCoordinate();
 }
-
 
 bool Map::initGL()
 {
@@ -328,7 +290,6 @@ void Map::writeFps()
     mFrame = 0;
     std::cout << fps << std::endl;
 }
-
 
 void Map::move(EnumDirection d)
 {
@@ -462,15 +423,6 @@ void Map::doJobBeforeRendering()
     drawMap();
     return;
 }
-
-/*void Map::mousePressEvent(QMouseEvent * event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        mSelectedId = hitID((unsigned short)event->x(), (unsigned short)event->y());
-
-    }
-}*/
 
 bool Map::drawMap()
 {
@@ -796,21 +748,6 @@ QColor Map::getColor(Light & idInBlock, int & posLeafGray, int colorIndex)
 {
     unsigned char leafGray = nextLeafGray(idInBlock, posLeafGray);
     QColor color;
-    /*if (mFillProvinceAttribute!=NULL && !mFillProvinceAttribute->second[idInBlock.id].empty())
-    {
-        if (!(leafGray & (1 << 6)))
-        {
-            if (mSelectedId == idInBlock.id)
-                color = mShadingColor[mColorFillArrayAttribute->at(mFillProvinceAttribute->second[idInBlock.id].front()).front()].second[leafGray & 63];
-            else
-                color = mShadingColor[mColorFillArrayAttribute->at(mFillProvinceAttribute->second[idInBlock.id].front()).front()].first[leafGray & 63];
-        }
-        else
-        {
-            color = mShadingColor[4].first[leafGray & 63];
-        }
-    }
-    else*/
     if (!mDebug)
     {
         if (!(leafGray & (1 << 6)))
@@ -1141,7 +1078,6 @@ bool Map::readConfigMap(std::string dir)
     file.close();
     return (true);
 }
-
 
 bool Map::addHitId(unsigned short id, std::string dir)
 {

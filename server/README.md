@@ -13,6 +13,4 @@ You need :
 - flask >= 0.11
 - mongoengine >= 0.14
 - Python >= 3.4
-
-To run :
-- python3 histemul_server.py
+- Apache 2 with mod_wsgi

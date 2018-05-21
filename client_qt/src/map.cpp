@@ -37,13 +37,21 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QDir>
+#include <QColor>
 
 Map::Map()
 {
     // configuration
     initShadingColor("./maps/config/shadingcolor.csv");
-    readConfigMap("./maps/");
+    for(std::vector<int>::size_type i = 0; i != mShadingColorIndex.size(); i++) {
+        if (mShadingColorIndex[i] == "blue")
+        {
+            mColorRiver = i;
+            break;
+        }
+    }
 
+    readConfigMap("./maps/");
     mLevelInit = log(float(mSizeBlock))/log(2.);
 
     mBlock.resize(mNbBlockHeight * mNbBlockWidth);
@@ -85,7 +93,7 @@ Map::Map()
     mWaitForMove = false;
     mManager = new QNetworkAccessManager(this);
     mProText.resize(65536, "");
-    mProColor.resize(65536, "black");
+    mProColor.resize(65536, qMakePair(QString("black"), QString("black")));
     connect(mManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotProvinceUpdateReply(QNetworkReply*)));
     connect(this, &QQuickItem::windowChanged, this, &Map::handleWindowChanged);
 }
@@ -191,13 +199,20 @@ void Map::slotProvinceUpdateReply(QNetworkReply* reply)
                     if (obj[f.at(i)].isObject())
                         obj = obj[f.at(i)].toObject();
                     else if (obj[f.at(i)].isArray())
-                        mProColor.at(id) = obj[f.at(i)].toArray().at(0).toString();
+                    {
+                        mProColor.at(id).first = obj[f.at(i)].toArray().at(0).toString();
+                        mProColor.at(id).second = obj[f.at(i)].toArray().at(1).toString();
+                    }
                     else
-                        mProColor.at(id) = obj[f.at(i)].toString();
+                    {
+                        mProColor.at(id).first = obj[f.at(i)].toString();
+                        mProColor.at(id).second = obj[f.at(i)].toString();
+                    }
                 }
                 else
                 {
-                    mProColor.at(id) = "black";
+                    mProColor.at(id).first = "black";
+                    mProColor.at(id).second = "black";
                     break;
                 }
             }
@@ -675,25 +690,34 @@ void Map::saveMap()
 
 void Map::drawBlock(int numBlock, int screenX, int screenY)
 {
+    int stripe =  (numBlock/mNbBlockWidth)%2;
     std::list<Light>::iterator idInBlock;
     for (idInBlock = mBlock[numBlock].begin() ; idInBlock != mBlock[numBlock].end(); idInBlock++ )
     {
         int posTree = 0;
         int posBit = 7;
         int posLeafGray = 0;
-        inspectBlock(*idInBlock, screenX, screenY, posTree, posBit, mLevelInit, posLeafGray);
+        inspectBlock(*idInBlock, screenX, screenY, posTree, posBit, mLevelInit, posLeafGray, stripe);
     }
     return;
 }
 
-void Map::inspectBlock(Light & idInBlock, int screenX, int screenY, int & posTree, int & posBit, int level, int & posLeafGray)
+void Map::inspectBlock(Light & idInBlock, int screenX, int screenY, int & posTree, int & posBit, int level, int & posLeafGray, int stripe)
 {
     int colorIndex;
     for(std::vector<int>::size_type i = 0; i != mShadingColorIndex.size(); i++) {
-        if (mShadingColorIndex[i] == mProColor.at(idInBlock.id))
-        {
-            colorIndex = i;
-            break;
+        if (stripe == 0){
+            if (mShadingColorIndex[i] == mProColor.at(idInBlock.id).first)
+            {
+                colorIndex = i;
+                break;
+            }
+        } else {
+            if (mShadingColorIndex[i] == mProColor.at(idInBlock.id).second)
+            {
+                colorIndex = i;
+                break;
+            }
         }
     }
     for (int posInQuad = 0; posInQuad < 4; posInQuad++)
@@ -737,7 +761,7 @@ void Map::inspectBlock(Light & idInBlock, int screenX, int screenY, int & posTre
             }
             else
             {
-                inspectBlock(idInBlock, screenX + mPosInQuad[posInQuad].x() * p2[level], screenY + mPosInQuad[posInQuad].y() * p2[level], posTree, posBit, level-1, posLeafGray);
+                inspectBlock(idInBlock, screenX + mPosInQuad[posInQuad].x() * p2[level], screenY + mPosInQuad[posInQuad].y() * p2[level], posTree, posBit, level-1, posLeafGray, stripe);
             }
         }
     }
@@ -759,7 +783,7 @@ QColor Map::getColor(Light & idInBlock, int & posLeafGray, int colorIndex)
         }
         else
         {
-            color = mShadingColor[4].first[leafGray & 63];
+            color = mShadingColor[mColorRiver].first[leafGray & 63];
         }
     }
     else color = mShadingColor[0].first[leafGray & 63];

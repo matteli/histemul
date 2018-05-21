@@ -47,6 +47,7 @@ class Model():
             'culture': Culture,
             'land': Land,
             'person': Person,
+            'player': Player,
             'province': Province,
             'title': Title,
             'war': War,

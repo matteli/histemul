@@ -42,8 +42,8 @@ Item {
     Map {
         id: map
         objectName: "map"
-        fill: "land.color"
-        //fill: "domain_of.holder.player.armory.tinctures"
+        //fill: "land.color"
+        fill: "domain_of.holder.player.armory.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
         PropertyAnimation on t { to: 100; loops: Animation.Infinite }

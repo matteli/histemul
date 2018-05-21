@@ -37,6 +37,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QOpenGLShaderProgram>
 #include <QColor>
+#include <QPair>
 //#include <QQuickItem>
 #include <QOpenGLFunctions>
 #include <QNetworkAccessManager>
@@ -119,6 +120,7 @@ private:
     int mLeft;
     int mSizeBorder;
     bool mCircum;
+    int mColorRiver;
     QRect mScreen;
     QRect mBlockScreen;
     QOpenGLShaderProgram *mProgram;
@@ -169,7 +171,7 @@ private:
     int mFrame = 0;
     QNetworkAccessManager *mManager = NULL;
     std::vector<QString> mProText;
-    std::vector<QString> mProColor;
+    std::vector<QPair<QString, QString>> mProColor;
 
 
 
@@ -188,7 +190,7 @@ private:
     QColor getColor(Light & idInBlock, int & posLeafGray, int colorIndex);
     int nextBitFromTree(Light &, int &, int &);
     unsigned char nextLeafGray(Light &, int &);
-    void inspectBlock(Light &, int, int, int &, int &, int, int &);
+    void inspectBlock(Light &, int, int, int &, int &, int, int &, int);
     inline void drawQuad(int, int, int, QColor);
     inline void drawPoint(int, int, QColor);
     void saveMap();

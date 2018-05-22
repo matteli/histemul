@@ -42,8 +42,8 @@ Item {
     Map {
         id: map
         objectName: "map"
-        //fill: "land.color"
-        fill: "domain_of.holder.player.armory.tinctures"
+        stripe1: "controller.player.armory.tinctures"
+        stripe0: "domain_of.holder.player.armory.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
         PropertyAnimation on t { to: 100; loops: Animation.Infinite }
@@ -568,7 +568,7 @@ Item {
                     sourceImage: 'gfx/gui/war.png'
                     onClicked:{
                         if (status === 'normal')
-                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, {'from': personProvince.id});
+                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, {'from': selectedPerson.id});
                     }
                 }
                 Comp.IconButton{

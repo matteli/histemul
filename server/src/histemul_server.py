@@ -69,7 +69,7 @@ def requesting():
         else:
             player = request.form['player']
             type = request.form['type']
-        print (type)
+        print (requestjs)
 
         if type == 'get' or type == 'get_all':
             cls = requestjs['cls']

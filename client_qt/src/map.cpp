@@ -85,7 +85,7 @@ Map::Map()
     mInitGL = false;
     mInit = false;
     mNext = All;
-    mFill = "";
+    //mFill = "";
 
     setFlag(QQuickItem::ItemHasContents, true);
     setAcceptedMouseButtons(Qt::AllButtons);
@@ -93,7 +93,9 @@ Map::Map()
     mWaitForMove = false;
     mManager = new QNetworkAccessManager(this);
     mProText.resize(65536, "");
-    mProColor.resize(65536, qMakePair(QString("black"), QString("black")));
+    QList<QString> black;
+    black << "black" << "black";
+    mProColor.resize(65536, black);
     connect(mManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotProvinceUpdateReply(QNetworkReply*)));
     connect(this, &QQuickItem::windowChanged, this, &Map::handleWindowChanged);
 }
@@ -116,11 +118,21 @@ void Map::init(unsigned int width, unsigned int height, QUrl url, bool debug, QS
     return;
 }
 
-void Map::setFill(QString fill)
+void Map::setStripe0(QString stripe)
 {
-    if (fill != mFill)
+    if (stripe != mStripe0)
     {
-        mFill = fill;
+        mStripe0 = stripe;
+        if (mInit) updateDataProvince();
+    }
+    return;
+}
+
+void Map::setStripe1(QString stripe)
+{
+    if (stripe != mStripe1)
+    {
+        mStripe1 = stripe;
         if (mInit) updateDataProvince();
     }
     return;
@@ -175,11 +187,33 @@ void Map::updateDataProvince()
     postData.insert("player", mPlayer);
     postData.insert("cls", "province");
     postData.insert("id", "all");
-    postData.insert("atts", QJsonArray({fill()}));
+    postData.insert("atts", QJsonArray({mStripe0, mStripe1}));
+
 
     QNetworkRequest request(mUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     mManager->post(request, QJsonDocument(postData).toJson());
+}
+
+void Map::inspectJson(int indexAttibute, QJsonObject obj, int id, QStringList stripe, int indexStripe)
+{
+    if (obj.contains(stripe.at(indexAttibute)))
+    {
+        if (obj[stripe.at(indexAttibute)].isObject())
+            inspectJson(indexAttibute+1, obj[stripe.at(indexAttibute)].toObject(), id, stripe, indexStripe);
+        else if (obj[stripe.at(indexAttibute)].isArray())
+        {
+            mProColor.at(id)[indexStripe] = obj[stripe.at(indexAttibute)].toArray().at(0).toString();
+        }
+        else
+        {
+            mProColor.at(id)[indexStripe] = obj[stripe.at(indexAttibute)].toString();
+        }
+    }
+    else
+    {
+        mProColor.at(id)[indexStripe] = "black";
+    }
 }
 
 void Map::slotProvinceUpdateReply(QNetworkReply* reply)
@@ -188,33 +222,18 @@ void Map::slotProvinceUpdateReply(QNetworkReply* reply)
     {
        QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
        QJsonArray json_array = jsonResponse.array();
-       QStringList f = fill().split('.');
+       QStringList s0 = mStripe0.split('.');
+       QStringList s1 = mStripe1.split('.');
+       QList<QStringList> stripes;
+       stripes << s0 << s1;
+       //QStringList f = fill().split('.');
        foreach (const QJsonValue & value, json_array){
             QJsonObject obj = value.toObject();
             int id = obj["_id"].toInt();
-            for (int i = 0; i < f.size(); ++i)
+            for (int i=0; i<stripes.size(); ++i)
             {
-                if (obj.contains(f.at(i)))
-                {
-                    if (obj[f.at(i)].isObject())
-                        obj = obj[f.at(i)].toObject();
-                    else if (obj[f.at(i)].isArray())
-                    {
-                        mProColor.at(id).first = obj[f.at(i)].toArray().at(0).toString();
-                        mProColor.at(id).second = obj[f.at(i)].toArray().at(1).toString();
-                    }
-                    else
-                    {
-                        mProColor.at(id).first = obj[f.at(i)].toString();
-                        mProColor.at(id).second = obj[f.at(i)].toString();
-                    }
-                }
-                else
-                {
-                    mProColor.at(id).first = "black";
-                    mProColor.at(id).second = "black";
-                    break;
-                }
+                QStringList stripe = stripes.at(i);
+                inspectJson(0, obj, id, stripe, i);
             }
         }
         mNext = All;
@@ -706,18 +725,10 @@ void Map::inspectBlock(Light & idInBlock, int screenX, int screenY, int & posTre
 {
     int colorIndex;
     for(std::vector<int>::size_type i = 0; i != mShadingColorIndex.size(); i++) {
-        if (stripe == 0){
-            if (mShadingColorIndex[i] == mProColor.at(idInBlock.id).first)
-            {
-                colorIndex = i;
-                break;
-            }
-        } else {
-            if (mShadingColorIndex[i] == mProColor.at(idInBlock.id).second)
-            {
-                colorIndex = i;
-                break;
-            }
+        if (mShadingColorIndex[i] == mProColor.at(idInBlock.id)[stripe])
+        {
+            colorIndex = i;
+            break;
         }
     }
     for (int posInQuad = 0; posInQuad < 4; posInQuad++)

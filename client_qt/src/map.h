@@ -47,7 +47,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 class Map : public QQuickItem, protected QOpenGLFunctions
 {
     Q_OBJECT
-    Q_PROPERTY(QString fill READ fill WRITE setFill NOTIFY fillChanged)
+    Q_PROPERTY(QString stripe0 READ stripe0 WRITE setStripe0 NOTIFY stripe0Changed)
+    Q_PROPERTY(QString stripe1 READ stripe1 WRITE setStripe1 NOTIFY stripe1Changed)
     //Q_PROPERTY(quint16 numberVisibleProvince READ numberVisibleProvince)
     //Q_PROPERTY(QList<QVariant> visibleProvince READ visibleProvince NOTIFY visibleProvinceChanged)
     Q_PROPERTY(qreal t READ t WRITE setT NOTIFY tChanged)
@@ -71,8 +72,10 @@ public:
         OnBottom,
         None };
 
-    QString fill() const { return mFill; }
-    void setFill(QString fill);
+    QString stripe0() const { return mStripe0; }
+    void setStripe0(QString stripe);
+    QString stripe1() const { return mStripe1; }
+    void setStripe1(QString stripe);
     qreal t() const { return mT; }
     void setT(qreal t);
     int top() const { return mTop; }
@@ -89,7 +92,8 @@ public:
 
 
 signals:
-    void fillChanged();
+    void stripe0Changed();
+    void stripe1Changed();
     void urlChanged();
     void tChanged();
     void moved();
@@ -109,7 +113,8 @@ private slots:
 private:
     //members
     int mNbVertices;
-    QString mFill;
+    QString mStripe0;
+    QString mStripe1;
     QString mPlayer;
     qreal mT;
     int mWidth, mHeight;
@@ -171,7 +176,7 @@ private:
     int mFrame = 0;
     QNetworkAccessManager *mManager = NULL;
     std::vector<QString> mProText;
-    std::vector<QPair<QString, QString>> mProColor;
+    std::vector<QList<QString>> mProColor;
 
 
 
@@ -191,6 +196,7 @@ private:
     int nextBitFromTree(Light &, int &, int &);
     unsigned char nextLeafGray(Light &, int &);
     void inspectBlock(Light &, int, int, int &, int &, int, int &, int);
+    void inspectJson(int indexAttibute, QJsonObject obj, int id, QStringList stripe, int indexStripe);
     inline void drawQuad(int, int, int, QColor);
     inline void drawPoint(int, int, QColor);
     void saveMap();

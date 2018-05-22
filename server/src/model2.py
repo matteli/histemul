@@ -447,48 +447,53 @@ class Model():
     def list_qset_atts_2(self, qset, atts):
         #att = atts[0].split('.')
         t0 = time.perf_counter()
-        attributs = atts[0].split('.')
-        final_property = attributs.pop()
-        cls = []
-        q = qset[0]._cls.lower()
-        for a in attributs:
-            q = getattr(self.model[q], a).document_type._class_name.lower()
-            cls.append(q)
-
+        af = {}
+        pj = {}
         pipeline = []
-        b = ''
-        for index, a in enumerate(attributs):
-            pipeline.append(
-                {
-                    '$lookup':
+        for att in atts:
+            attributs = att.split('.')
+            final_property = attributs.pop()
+            cls = []
+            q = qset[0]._cls.lower()
+            for a in attributs:
+                q = getattr(self.model[q], a).document_type._class_name.lower()
+                cls.append(q)
+
+            c = ''
+            for index, a in enumerate(attributs):
+                if c:
+                    c = c + '.' + a
+                else:
+                    c = a
+                pipeline.append(
                     {
-                        'from': cls[index],
-                        'localField': b + a,
-                        'foreignField': '_id',
-                        'as': a
+                        '$lookup':
+                        {
+                            'from': cls[index],
+                            'localField': c,
+                            'foreignField': '_id',
+                            'as': c
+                        }
+                    }                
+                )
+                pipeline.append(
+                    {
+                        '$unwind': '$'+ c
                     }
-                }                
-            )
-            b = a + '.'
-            pipeline.append(
-                {
-                    '$unwind': '$'+a
-                }
-            )
+                )
+
+            af[att] = '$' + c + '.' + final_property
+            pj[att] = True
+        
+
         pipeline.append(
             {
-                '$addFields': 
-                {
-                    atts[0]: '$'+a+'.'+final_property
-                }
+                '$addFields': af
             }
         )
         pipeline.append(
             {
-                '$project': 
-                {
-                    atts[0]: True
-                }
+                '$project':  pj
             }
         )
         print (pipeline)

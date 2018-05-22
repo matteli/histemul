@@ -1,3 +1,4 @@
 __pycache__/
 .vscode/
 seafile-ignore.txt
+*.autosave

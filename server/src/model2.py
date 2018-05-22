@@ -33,7 +33,6 @@ from player import Player
 from province import Province
 from title import Title
 from war import War
-from armory import Armory
 from mongoengine import connect, QuerySet
 import random
 import time
@@ -51,7 +50,6 @@ class Model():
             'province': Province,
             'title': Title,
             'war': War,
-            'armory': Armory
         }
         connect('histemul')
         self.orders = {}

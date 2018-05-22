@@ -24,15 +24,18 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from mongoengine import Document, StringField, ReferenceField
+from mongoengine import Document, StringField, ReferenceField, ListField
 from person import Person
 
 
 class Player(Document):
 
     name = StringField(primary_key=True)
-    armory = ReferenceField('Armory')
     leader = ReferenceField('Person')
+    shape = StringField()
+    division = StringField()
+    tinctures = ListField(StringField())
+
 
     @property
     def controlled(self):

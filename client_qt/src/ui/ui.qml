@@ -42,8 +42,8 @@ Item {
     Map {
         id: map
         objectName: "map"
-        stripe1: "controller.player.armory.tinctures"
-        stripe0: "domain_of.holder.player.armory.tinctures"
+        stripe1: "controller.player.tinctures"
+        stripe0: "domain_of.holder.player.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
         //PropertyAnimation on t { to: 100; loops: Animation.Infinite }
@@ -342,7 +342,7 @@ Item {
             var p = root.provinceSelected;
             RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'province': p});
             RQ.get(selected_province_name, ['text'], 'province',  p, ['name']);
-            RQ.get(selected_province_domain_of_holder_player_armory, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.armory.division', 'domain_of.holder.player.armory.tinctures'], ['domain_of.holder.player.armory.tinctures']);
+            RQ.get(selected_province_domain_of_holder_player, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
             RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': selectedPerson.id})
             RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': selectedPerson.id})
             RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
@@ -358,7 +358,7 @@ Item {
     {
         if (root.leftMenu.peaceBar.visible)
         {
-            RQ.getAll(person, 'person', ['knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters');
+            RQ.get(selected_province_domain_of_holder_player2, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
         }
     }
 
@@ -492,7 +492,7 @@ Item {
                     source: "gfx/gui/wood_square.png"
                     //anchors.horizontalCenter: parent.horizontalCenter
                     Comp.Shield{
-                        id: selected_province_domain_of_holder_player_armory_2
+                        id: selected_province_domain_of_holder_player2
                     }
                 }
 
@@ -533,7 +533,7 @@ Item {
                 source: "gfx/gui/wood_square.png"
                 anchors.horizontalCenter: parent.horizontalCenter
                 Comp.Shield{
-                    id: selected_province_domain_of_holder_player_armory
+                    id: selected_province_domain_of_holder_player
                     MouseArea{
                         anchors.fill: parent
                         onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'domain_of.holder': provinceSelected})

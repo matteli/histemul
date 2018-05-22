@@ -85,9 +85,8 @@ Map::Map()
     mInitGL = false;
     mInit = false;
     mNext = All;
-    //mFill = "";
 
-    setFlag(QQuickItem::ItemHasContents, true);
+    //setFlag(QQuickItem::ItemHasContents, true);
     setAcceptedMouseButtons(Qt::AllButtons);
     mSelectedId = 0;
     mWaitForMove = false;
@@ -178,6 +177,11 @@ void Map::calculateCoordinate()
     mTop = mTopBlock * mSizeBlock;
     mBlockScreen.setCoords(mLeftBlock, mTopBlock, mLeftBlock + mNbBlockScreenWidth, mTopBlock + mNbBlockScreenHeight);
     return;
+}
+
+void Map::updateLightMap()
+{
+    updateDataProvince();
 }
 
 void Map::updateDataProvince()

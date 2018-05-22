@@ -87,6 +87,7 @@ public:
     Q_INVOKABLE unsigned short hitID(unsigned short x, unsigned short y);
     Q_INVOKABLE QVariant selectID(unsigned short x, unsigned short y);
     Q_INVOKABLE void unSelectID();
+    Q_INVOKABLE void updateLightMap();
     void init(unsigned int width, unsigned int height, QUrl url, bool debug, QString player);
     void resize(QSize size, QSize oldSize);
 

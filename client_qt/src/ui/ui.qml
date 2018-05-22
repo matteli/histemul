@@ -46,7 +46,7 @@ Item {
         stripe0: "domain_of.holder.player.armory.tinctures"
         topLeftBlock: 2355
         //property bool moved: false
-        PropertyAnimation on t { to: 100; loops: Animation.Infinite }
+        //PropertyAnimation on t { to: 100; loops: Animation.Infinite }
         property var province: ({})
         property var armyFile: ({'army_parameters': false, 'army_for_the': false})
         property var army: ({})
@@ -79,6 +79,7 @@ Item {
             RQ.getAll(army, 'army', ['knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters');
             RQ.getAll(army, 'army', ['for_the.player'], 'all', 'army_for_the');
             RQ.getAll(province, 'province', ['population', 'siege', 'morale'], 'all', 'province_others_parameters');
+            map.updateLightMap();
         }
 
 

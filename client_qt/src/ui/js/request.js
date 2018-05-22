@@ -36,13 +36,16 @@ function send(item, props, http_params)
             if(http.readyState == 4 && http.status == 200) {
                 console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
-                if (!Array.isArray(props))
-                    item[props] = res[props];
-                else
+                if (!(Object.keys(res).length === 0))
                 {
-                    for (var p in props)
+                    if (!Array.isArray(props))
+                        item[props] = res[props];
+                    else
                     {
-                        item[props[p]] = res[props[p]];
+                        for (var p in props)
+                        {
+                            item[props[p]] = res[props[p]];
+                        }
                     }
                 }
             }

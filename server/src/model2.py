@@ -445,6 +445,8 @@ class Model():
     def list_qset_atts_2(self, qset, atts):
         #att = atts[0].split('.')
         t0 = time.perf_counter()
+        if not qset:
+            return []
         af = {}
         pj = {}
         pipeline = []
@@ -453,6 +455,7 @@ class Model():
             final_property = attributs.pop()
             cls = []
             q = qset[0]._cls.lower()
+            
             for a in attributs:
                 q = getattr(self.model[q], a).document_type._class_name.lower()
                 cls.append(q)
@@ -502,6 +505,7 @@ class Model():
         return res
 
     def get_player_person_title(self, player, opts):
+        response = {}
         try:
             player = Player.objects.get(pk=player)
         except:
@@ -509,16 +513,28 @@ class Model():
         
         if opts['type'] == 'leader':
             person = player.leader
+            player2 = player
+        
+        elif opts['type'] == 'home_province':
+            try:
+                province = Province.objects.get(pk=opts['province']).select_related(3)
+            except:
+                return {}
+            if player != province.domain_of.holder.player:
+                return {}
+            person = province.domain_of.holder
+            player2 = player
+            
         elif opts['type'] == 'province':
             try:
                 province = Province.objects.get(pk=opts['province']).select_related(3)
             except:
                 return {}
             person = province.domain_of.holder
+            player2 = person.player
         else:
             return {}
 
-        response = {}
         response['name'] = person.name
         titles = Title.objects.filter(holder=person)
         level = 0
@@ -532,4 +548,8 @@ class Model():
         response['level'] = title.level
         response['number'] = title.name_number[person.name]
         response['id'] = person.id
+        response['shape'] = player2.shape
+        response['division'] = player2.division
+        response['tinctures'] = player2.tinctures
+
         return response

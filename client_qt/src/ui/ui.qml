@@ -86,7 +86,7 @@ Item {
         Component.onCompleted:
         {
             RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters');
-            RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'leader'})
+            RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'leader'})
         }
 
         onFilesReceived:
@@ -292,36 +292,63 @@ Item {
 
     QtObject {
         id: selectedPerson
-        property string name
-        property int number
-        property string title
-        property int level
-        property int id
+        property string name: ""
+        property int number: 1
+        property string title: ""
+        property int level: 1
+        property string shape: ""
+        property string division: ""
+        property var tinctures: ["white", "white"]
+        property int id: 0
         onNameChanged: update();
         onNumberChanged: update();
         onTitleChanged: update();
         onLevelChanged: update();
+        onShapeChanged: updateArmory();
+        onDivisionChanged: updateArmory();
+        onTincturesChanged: updateArmory();
         function update()
         {
-            selected_person.text = name + ' ' + FC.a2r(number) + ' of ' + title
+            selectedPersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title
+        }
+        function updateArmory()
+        {
+            //selectedPersonShield.shape = shape;
+            selectedPersonShield.division = division;
+            selectedPersonShield.tinctures = tinctures;
         }
     }
 
     QtObject {
         id: selectedProvincePerson
-        property string name
-        property int number
-        property string title
-        property int level
-        property int id
+        property string name: ""
+        property int number: 1
+        property string title: ""
+        property int level: 1
+        property string shape: ""
+        property string division: ""
+        property var tinctures: ["white", "white"]
+        property int id: 0
         onNameChanged: update();
         onNumberChanged: update();
         onTitleChanged: update();
         onLevelChanged: update();
+        onShapeChanged: updateArmory();
+        onDivisionChanged: updateArmory();
+        onTincturesChanged: updateArmory();
         function update()
         {
-            selected_province_person.text = name + ' ' + FC.a2r(number) + ' of ' + title
+            selectedProvincePersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title
         }
+        function updateArmory()
+        {
+            //selectedPersonShield.shape = shape;
+            selectedProvincePersonShield.division = division;
+            selectedProvincePersonShield.tinctures = tinctures;
+            selectedProvincePersonShieldPeace.division = division;
+            selectedProvincePersonShieldPeace.tinctures = tinctures;
+        }
+
     }
 
 
@@ -340,12 +367,12 @@ Item {
     {
         if (root.provinceSelected){
             var p = root.provinceSelected;
-            RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'province': p});
-            RQ.get(selected_province_name, ['text'], 'province',  p, ['name']);
-            RQ.get(selected_province_domain_of_holder_player, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
-            RQ.getStatus(declare_war_button, 'status', 'declare_war', p, {'from': selectedPerson.id})
-            RQ.getStatus(propose_peace_button, 'status', 'propose_peace', p, {'from': selectedPerson.id})
-            RQ.getStatus(rally_troops_button, 'status', 'rally_troops', p)
+            RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'province', 'province': p});
+            RQ.get(selectedProvinceName, ['text'], 'province',  p, ['name']);
+            //RQ.get(selectedProvinceDomainOfHolderPlayer, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
+            RQ.getStatus(declareWarButton, 'status', 'declare_war', p, {'from': selectedPerson.id})
+            RQ.getStatus(proposePeaceButton, 'status', 'propose_peace', p, {'from': selectedPerson.id})
+            RQ.getStatus(rallyTroopsButton, 'status', 'rally_troops', p)
         }
     }
 
@@ -358,7 +385,7 @@ Item {
     {
         if (root.leftMenu.peaceBar.visible)
         {
-            RQ.get(selected_province_domain_of_holder_player2, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
+            //RQ.get(selectedProvinceDomainOfHolderPlayer2, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
         }
     }
 
@@ -448,7 +475,7 @@ Item {
             x: 15
             Text
             {
-                id: selected_person
+                id: selectedPersonText
                 text: ""
                 renderType: Text.NativeRendering
                 wrapMode: Text.Wrap
@@ -490,30 +517,19 @@ Item {
             {
                 Image {
                     source: "gfx/gui/wood_square.png"
-                    //anchors.horizontalCenter: parent.horizontalCenter
-                    Comp.Shield{
-                        id: selected_province_domain_of_holder_player2
+                    Comp.Shield {
+                        id: selectedPersonShield
                     }
                 }
 
-                Image {
-                    source: "gfx/gui/wood_square.png"
-                    Image {
-                        id: pbTopShieldLeft
-                        //source: "gfx/shields/shield_" + model.getName("Country", model.controlled()) + "_1.png"
-                        anchors.centerIn: parent
-                    }
-                }
                 Image {
                     source: "gfx/gui/peace_arrow.png"
                 }
 
                 Image {
                     source: "gfx/gui/wood_square.png"
-                    Image {
-                        id: pbTopShieldRight
-                        //source: "gfx/shields/shield_" + model.getName("Country", leftMenu.countryPeace) + "_1.png"
-                        anchors.centerIn: parent
+                    Comp.Shield {
+                        id: selectedProvincePersonShieldPeace
                     }
                 }
 
@@ -533,10 +549,10 @@ Item {
                 source: "gfx/gui/wood_square.png"
                 anchors.horizontalCenter: parent.horizontalCenter
                 Comp.Shield{
-                    id: selected_province_domain_of_holder_player
+                    id: selectedProvincePersonShield
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'id'], 'player_person_title', {'type': 'province', 'domain_of.holder': provinceSelected})
+                        onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'home_province', 'province': provinceSelected})
                     }
                 }
 
@@ -544,7 +560,7 @@ Item {
 
             Text
             {
-                id: selected_province_person
+                id: selectedProvincePersonText
                 text: ""
                 renderType: Text.NativeRendering
                 wrapMode: Text.Wrap
@@ -563,17 +579,17 @@ Item {
                 anchors.rightMargin: 20
                 spacing: 5
                 Comp.IconButton{
-                    id: declare_war_button
+                    id: declareWarButton
                     z: 10
                     toolTip: 'Declare War'
                     sourceImage: 'gfx/gui/war.png'
                     onClicked:{
                         if (status === 'normal')
-                            RQ.postMsg(declare_war_button, 'status', 'declare_war', root.provinceSelected, {'from': selectedPerson.id});
+                            RQ.postMsg(declareWarButton, 'status', 'declare_war', root.provinceSelected, {'from': selectedPerson.id});
                     }
                 }
                 Comp.IconButton{
-                    id: propose_peace_button
+                    id: proposePeaceButton
                     z: 5
                     toolTip: "Propose peace"
                     sourceImage: "gfx/gui/peace.png"
@@ -598,7 +614,7 @@ Item {
 
             Text
             {
-                id: selected_province_name
+                id: selectedProvinceName
                 text: "Province"
                 renderType: Text.NativeRendering
                 wrapMode: Text.Wrap
@@ -618,12 +634,12 @@ Item {
                 spacing: 5
                 Comp.IconButton
                 {
-                    id: rally_troops_button
+                    id: rallyTroopsButton
                     toolTip: "Rally troops"
                     sourceImage: "gfx/gui/aban.png"
                     onClicked:{
                         if (status == "normal")
-                            RQ.postMsg(rally_troops_button, 'status', 'rally_troops', root.provinceSelected);
+                            RQ.postMsg(rallyTroopsButton, 'status', 'rally_troops', root.provinceSelected);
                     }
                 }
             }

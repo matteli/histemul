@@ -9,6 +9,7 @@ QT       += quick
 QT       += gui
 QT       += testlib
 QT       += network
+QT       += quickcontrols2
 
 
 

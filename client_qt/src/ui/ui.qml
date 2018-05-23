@@ -23,8 +23,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import QtQuick 2.7
-import QtQuick.Controls 2.4
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 
 import "./" as Comp
 import QtGraphicalEffects 1.0
@@ -39,7 +39,6 @@ import "./js/func.js" as FC
 
 Item {
     id: root
-
     Map {
         id: map
         objectName: "map"
@@ -131,25 +130,28 @@ Item {
             width: root.width
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onClicked: {
-                if (mouse.button === Qt.RightButton)
+                if (!peaceBar.visible)
                 {
-                    var armies = map.armySprite.getSelected();
-                    for (var i in armies)
-                        RQ.postMsg(map.armySprite.get(armies[i]), 'way', 'move_troops', armies[i], {'to': parent.hitID(mouse.x,mouse.y)});
-                }
-                else
-                {
-                    var p = map.selectID(mouse.x,mouse.y);
-                    if (p === root.provinceSelected)
+                    if (mouse.button === Qt.RightButton)
                     {
-                        map.unSelectID();
-                        root.provinceSelected = 0;
+                        var armies = map.armySprite.getSelected();
+                        for (var i in armies)
+                            RQ.postMsg(map.armySprite.get(armies[i]), 'way', 'move_troops', armies[i], {'to': parent.hitID(mouse.x,mouse.y)});
                     }
                     else
                     {
-                        root.provinceSelected = p;
-                        root.updateInfoBar();
-                        map.armySprite.unselectAll();
+                        var p = map.selectID(mouse.x,mouse.y);
+                        if (p === root.provinceSelected)
+                        {
+                            map.unSelectID();
+                            root.provinceSelected = 0;
+                        }
+                        else
+                        {
+                            root.provinceSelected = p;
+                            root.updateInfoBar();
+                            map.armySprite.unselectAll();
+                        }
                     }
                 }
             }
@@ -510,7 +512,28 @@ Item {
             spacing: 0
             id: peaceBar
             visible: false
+            Row
+            {
+                Comp.IconButton{
+                    toolTip: 'Cancel'
+                    sourceImage: 'gfx/gui/arrow.png'
+                    status: 'normal'
+                    onClicked:{
+                        peaceBar.visible = false;
+                        infoBar.visible = true;
+                    }
+                }
+                Comp.IconButton{
+                    toolTip: 'Offer peace'
+                    sourceImage: 'gfx/gui/peace.png'
+                    status: 'normal'
+                    onClicked:{
+                        peaceBar.visible = false;
+                        infoBar.visible = true;
+                    }
+                }
 
+            }
             Row
             {
                 Image {
@@ -531,6 +554,12 @@ Item {
                     }
                 }
 
+            }
+            Row
+            {
+                SpinBox {
+
+                }
             }
         }
 

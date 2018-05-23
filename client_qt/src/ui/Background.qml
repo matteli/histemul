@@ -1,4 +1,4 @@
-import QtQuick 2.1
+import QtQuick 2.9
 
 Image {
     source: "gfx/gui/background.png"

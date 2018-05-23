@@ -37,7 +37,7 @@ class Engine(threading.Thread):
         random.seed()
         self.terminated = False
         self.model = Model()
-        self.speed = 20.0 #update rate in seconds
+        self.speed = 5.0 #update rate in seconds
         self.update_flag_tick = [threading.Event(), threading.Event()]
         self.update_flag_global = threading.Event()
         self.tick = 1

@@ -24,7 +24,8 @@ THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 import QtQuick 2.7
-import QtQuick.Controls 1.0
+import QtQuick.Controls 2.4
+
 import "./" as Comp
 import QtGraphicalEffects 1.0
 //import "constantMsg.js" as Cmsg
@@ -351,7 +352,6 @@ Item {
 
     }
 
-
     QtObject {
         id: clock
         property int tick
@@ -362,14 +362,12 @@ Item {
         }
     }
 
-
     function updateInfoBar()
     {
         if (root.provinceSelected){
             var p = root.provinceSelected;
             RQ.getInFunction(selectedProvincePerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'province', 'province': p});
             RQ.get(selectedProvinceName, ['text'], 'province',  p, ['name']);
-            //RQ.get(selectedProvinceDomainOfHolderPlayer, ['division', 'tinctures'], 'province', p, ['domain_of.holder.player.division', 'domain_of.holder.player.tinctures'], ['domain_of.holder.player.tinctures']);
             RQ.getStatus(declareWarButton, 'status', 'declare_war', p, {'from': selectedPerson.id})
             RQ.getStatus(proposePeaceButton, 'status', 'propose_peace', p, {'from': selectedPerson.id})
             RQ.getStatus(rallyTroopsButton, 'status', 'rally_troops', p)
@@ -425,7 +423,7 @@ Item {
         id: notifList
     }*/
 
-    /*Comp.Window {
+    /*Comp.Background {
         id: topMenu
         anchors.top: parent.top
         anchors.left: parent.left
@@ -462,7 +460,7 @@ Item {
             }
         }
     }*/
-    Comp.Window {
+    Comp.Background {
         id: topMenu
         anchors.top: parent.top
         anchors.left: parent.left
@@ -488,7 +486,7 @@ Item {
 
     }
 
-    Comp.Window {
+    Comp.Background {
         id: leftMenu
         style: 2
         states:
@@ -535,8 +533,6 @@ Item {
 
             }
         }
-
-
 
         Column{
             anchors.horizontalCenter: parent.horizontalCenter
@@ -645,4 +641,6 @@ Item {
             }
         }
     }
+
 }
+

@@ -102,14 +102,7 @@ function get(item, props, cls, id, atts, tabs, cache)
                     }
                 }
 
-                /*if (tab)
-                    item[props] = res[atts];
-                else
-                    if (res[atts][0])
-                        item[props] = res[atts][0];
-                    else
-                        item[props] = 'Undefined';
-
+                /*
                 if (cache)
                 {
                     if (!(cls in cache)) cache[cls] = {};
@@ -140,7 +133,6 @@ function getAll(item, cls, atts, id, sig)
             if(http.readyState == 4 && http.status == 200) {
                 //console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
-                //var ps = atts.split(";");
                 for (var r in res) {
                     var idd;
                     if (typeof res[r]['_id'] == 'object')
@@ -149,14 +141,10 @@ function getAll(item, cls, atts, id, sig)
                         idd = res[r]['_id'];
                     delete res[r]['_id'];
                     if (!(idd in item)) item[idd] = {};
-                    //for (var p in ps)
-                        //item[idd][ps[p]] = res[r][ps[p]];
                     for (var att in res[r])
                     {
                         item[idd][att] = res[r][att];
                     }
-
-                    //item[idd] = res[r];
                 }
                 map.filesReceived(sig);
                 //console.info(item);

@@ -42,7 +42,6 @@ DISTFILES += \
     ui/scripts/text.js \
     ui/fixedSpriteMap.js \
     ui/constantMsg.js \
-    ui/Window.qml \
     ui/IconButton.qml \
     configUi/components/Map.qml \
     ui/ui.qml \
@@ -106,4 +105,5 @@ DISTFILES += \
     ui/Shield.qml \
     ui/.gitignore \
     .gitignore \
-    ui/js/func.js
+    ui/js/func.js \
+    ui/Background.qml

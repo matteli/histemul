@@ -27,6 +27,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 from mongoengine import Document, ReferenceField, BooleanField
 from mongoengine.queryset.visitor import Q
 from army import Army
+from functions import *
 
 
 class Battle(Document):
@@ -54,23 +55,10 @@ class Battle(Document):
         army.attitude = 'defender'
 
     def remove_army(self, army):
-        if army.attitude == 'aggressor':
-            self.remove_aggressor(army)
-        elif army.attitude == 'defender':
-            self.remove_defender(army)
-        
-    def remove_aggressor(self, army):
         army.battle = None
         army.attitude = 'normal'
-        self.aggressors.remove(army)
-
-    def remove_defender(self, army):
-        army.battle = None
-        army.attitude = 'normal'
-        self.defenders.remove(army)
 
     def end(self):
         self.active = False
-        for army in self.defenders | self.aggressors:
+        for army in merge_qsets(self.defenders, self.aggressors):
             self.remove_army(army)
-        self.location.battle = None

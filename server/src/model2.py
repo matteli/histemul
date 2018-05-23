@@ -36,6 +36,7 @@ from war import War
 from mongoengine import connect, QuerySet
 import random
 import time
+from functions import *
 
 
 class Model():
@@ -60,7 +61,7 @@ class Model():
         return 'normal'
         
     def declare_war(self, aggressor, defender, status):
-        if aggressor == defender:
+        if aggressor.player == defender.player:
             return 'hidden'
         if set(aggressor.wars_aggressor).intersection(defender.wars_defender):
             return 'disabled'
@@ -72,7 +73,7 @@ class Model():
         return self.end_order(status)
         
     def propose_peace(self, aggressor, defender, opt, status):
-        if aggressor == defender:
+        if aggressor.player == defender.player:
             return 'hidden'
         if not set(aggressor.wars_aggressor).intersection(defender.wars_defender) and not set(aggressor.wars_defender).intersection(defender.wars_aggressor):
             return 'disabled'
@@ -89,7 +90,7 @@ class Model():
             province.save()
             return 'done'
         return self.end_order(status)
-
+    
     def move_troops(self, player, army, to_province, status):
         if army.for_the.player != player:
             return 'hidden'
@@ -107,19 +108,17 @@ class Model():
         battle = Battle.objects.create(war=war, location=location, active=True)
         for aggressor in aggressors:
             aggressor.battle = battle
+            aggressor.attitude = 'agressor'
         for defender in defenders:
             defender.battle = battle
+            aggressor.attitude = 'defender'
         return battle
     
-    def merge_qsets(self, *args):
-        qset = []
-        for a in args:
-            if a:
-                try:
-                    qset += a
-                except:
-                    qset = a
-        return qset
+    def dismiss_army(self, army):
+        army.origin.manpower += army.knights
+        army.knights = 0
+        army.save()
+        army.delete()
 
     def make_orders(self, player, msg, idd, opt, status):
 
@@ -170,7 +169,7 @@ class Model():
                     person = army.for_the
                     if not province.battle:
                         enemy = []
-                        for war in self.merge_qsets(person.wars_aggressor, person.wars_defender):
+                        for war in merge_qsets(person.wars_aggressor, person.wars_defender):
                             for enemy_person in war.get_enemies(person):
                                 for other_army in province.armies:
                                     if enemy_person == other_army.for_the:
@@ -223,7 +222,7 @@ class Model():
                             province.war_siege = None
                             province.siege = 0
                     else:
-                        for war in self.merge_qsets(province.controller.wars_aggressor, province.controller.wars_defender):
+                        for war in merge_qsets(province.controller.wars_aggressor, province.controller.wars_defender):
                             for enemy_country in war.get_enemies(province.controller):
                                 for army in province.armies:
                                     if army.for_the == enemy_country and army.attitude == 'normal':

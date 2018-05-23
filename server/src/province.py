@@ -70,7 +70,7 @@ class Province(Document):
     @property
     def battle(self):
         #from battle import Battle
-        return Battle.objects(Q(location=self) & Q(active=True))
+        return Battle.objects(location=self).first()
 
     @property
     def armies(self):
@@ -80,7 +80,7 @@ class Province(Document):
     @property
     def army(self):
         #from army import Army
-        return Army.objects(origin=self)
+        return Army.objects(origin=self).first()
 
     def get_random_walkable_adjacent(self):
         nb_walkable = 0

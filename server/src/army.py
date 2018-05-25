@@ -48,10 +48,9 @@ class Army(Document):
         self.way = []
 
     def retreat(self):
-        if self.battle:
-            self.battle.remove_army(self)
-            self.attitude = 'retreat'
-            province = self.location.get_random_wakable_adjacent()
-            self.next_province = province
-            self.way.append(province)
-            self.time_walking = 0
+        self.battle = None
+        self.attitude = 'retreat'
+        province = self.location.get_random_walkable_adjacent()
+        self.next_province = province
+        self.way.append(province)
+        self.time_walking = 0

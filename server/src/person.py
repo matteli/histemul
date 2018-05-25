@@ -43,6 +43,11 @@ class Person(Document):
     location = ReferenceField('Province')
 
     @property
+    def wars(self):
+        from war import War
+        return War.objects(Q(aggressors=self) | Q(defenders=self))
+
+    @property
     def children(self):
         return Person.objects(Q(father=self) | Q(mother=self))
 
@@ -61,22 +66,23 @@ class Person(Document):
         #from army import Army
         return Army.objects(for_the=self)
 
-    @property
-    def wars_aggressor(self):
-        from war import War
-        return War.objects(aggressors=self)
-
-    @property
-    def wars_defender(self):
-        from war import War
-        return War.objects(defenders=self)
-
     def get_married_with(self, spouse):
         if not (self.male==spouse.male):
             self.spouse = spouse
             spouse = self
             return True
         return False
+    
+    def in_war_against(self, person):
+        for war in self.wars:
+            if self in war.aggressors:
+                if person in war.defenders:
+                    return {'war': war, 'attitude': 'aggressor'}
+            if self in war.defenders:
+                if person in war.aggressors:
+                    return {'war': war, 'attitude': 'defender'}
+        return None
+            
 
     def dead(self, date):
         if self.spouse:

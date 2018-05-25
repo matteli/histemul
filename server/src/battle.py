@@ -46,6 +46,10 @@ class Battle(Document):
         #from army import Army
         return Army.objects(Q(battle=self) & Q(attitude='defender'))
 
+    @property
+    def armies(self):
+        return Army.objects(battle=self)
+
     def add_aggressor(self, army):
         army.battle = self
         army.attitude = 'aggressor'
@@ -57,6 +61,16 @@ class Battle(Document):
     def remove_army(self, army):
         army.battle = None
         army.attitude = 'normal'
+    
+    def counting_knights(self):
+        aggressors = 0
+        defenders = 0
+        for army in self.armies:
+            if army.attitude == 'defender':
+                defenders += army.knights
+            elif army.attitude == 'aggressor':
+                aggressors += army.knights
+        return {'aggressors': aggressors, 'defenders': defenders}
 
     def end(self):
         self.active = False

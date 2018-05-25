@@ -63,9 +63,7 @@ class Model():
     def declare_war(self, aggressor, defender, status):
         if aggressor.player == defender.player:
             return 'hidden'
-        if set(aggressor.wars_aggressor).intersection(defender.wars_defender):
-            return 'disabled'
-        if set(aggressor.wars_defender).intersection(defender.wars_aggressor):
+        if set(aggressor.wars).intersection(defender.wars):
             return 'disabled'
         if status == 'execute':
             War.objects.create(aggressors=[aggressor], defenders=[defender], active=True)
@@ -75,7 +73,7 @@ class Model():
     def propose_peace(self, aggressor, defender, opt, status):
         if aggressor.player == defender.player:
             return 'hidden'
-        if not set(aggressor.wars_aggressor).intersection(defender.wars_defender) and not set(aggressor.wars_defender).intersection(defender.wars_aggressor):
+        if not set(aggressor.wars).intersection(defender.wars):
             return 'disabled'
         return self.end_order(status)
 
@@ -108,10 +106,12 @@ class Model():
         battle = Battle.objects.create(war=war, location=location, active=True)
         for aggressor in aggressors:
             aggressor.battle = battle
-            aggressor.attitude = 'agressor'
+            aggressor.attitude = 'aggressor'
+            aggressor.save()
         for defender in defenders:
             defender.battle = battle
-            aggressor.attitude = 'defender'
+            defender.attitude = 'defender'
+            defender.save()
         return battle
     
     def dismiss_army(self, army):
@@ -150,7 +150,7 @@ class Model():
                 self.make_orders(player, order[0][0], order[0][1], order[1], 'execute')
         print("Start Update Army")
         #army
-        for army in Army.objects:
+        for army in Army.objects.select_related(3):
             if army.knights:
                 if army.way and army.next_province != army.way[-1]:
                     army.next_province = army.way[-1]
@@ -168,7 +168,21 @@ class Model():
                     #when enter a new province, look if there is enemy or already a battle
                     person = army.for_the
                     if not province.battle:
-                        enemy = []
+                        war = None
+                        enemies = []
+                        for army_in_province in province.armies:
+                            if not war:
+                                war = person.in_war_against(army_in_province.for_the)['war']
+                                enemies.append(army_in_province)
+                            else:
+                                w = person.in_war_against(army_in_province.for_the)[0]['war']
+                                if w == war:
+                                    enemies.append(army_in_province)
+                        if enemies: #enemy so battle
+                            army.stop()
+                            self.new_battle(war, province, [army], enemies)
+
+                        '''enemy = []
                         for war in merge_qsets(person.wars_aggressor, person.wars_defender):
                             for enemy_person in war.get_enemies(person):
                                 for other_army in province.armies:
@@ -177,19 +191,17 @@ class Model():
                             if enemy: #enemy so battle
                                 self.new_battle(war, province, [army], enemy)
                                 army.stop()
-                                break
+                                break'''
 
                     else:
-                        war = province.battle.war
-                        person_defender = province.battle.defenders[0].for_the
-                        if person_defender in war.get_allies(person): #allies
-                            province.battle.add_defender(army)
+                        battle = province.battle
+                        war = battle.war
+                        if person in war.aggressors:
                             army.stop()
-                        elif person_defender in war.get_enemies(person): #enemy
-                            province.battle.add_aggressor(army)
+                            battle.add_defender(army)
+                        if person in war.defenders:
                             army.stop()
-
-                    
+                            battle.add_aggressor(army)
 
                 if army.next_province:
                     army.time_walking += 500 * army.location.land.walkable
@@ -222,7 +234,7 @@ class Model():
                             province.war_siege = None
                             province.siege = 0
                     else:
-                        for war in merge_qsets(province.controller.wars_aggressor, province.controller.wars_defender):
+                        for war in province.controller.wars:
                             for enemy_country in war.get_enemies(province.controller):
                                 for army in province.armies:
                                     if army.for_the == enemy_country and army.attitude == 'normal':
@@ -254,63 +266,55 @@ class Model():
             province.save()
 
         print("Start Update Battle")
-        for battle in Battle.objects:
+        for battle in Battle.objects.select_related(3):
             if battle.active:
                 battle_dice_defenders = ((random.randrange(10) + 1)**2) / 4
                 battle_dice_aggressors = ((random.randrange(10) + 1)**2) / 4
 
-                nb_knights_aggressors = 0
-                for aggressor in battle.aggressors:
-                    nb_knights_aggressors += aggressor.knights
-
-                nb_knights_defenders = 0
-                for defender in battle.defenders:
-                    nb_knights_defenders += defender.knights
-
+                nb_knights = battle.counting_knights()
 
                 defenders = battle.defenders
                 for army in defenders:
-                    army_loose = int(army.knights * nb_knights_aggressors * battle_dice_aggressors / (500 * nb_knights_defenders))
+                    army_loose = int(army.knights * nb_knights['aggressors'] * battle_dice_aggressors / (500 * nb_knights['defenders']))
                     if army_loose >= army.knights:
-                        nb_knights_defenders -= army.knights
+                        #nb_knights_defenders -= army.knights
                         army.knights = 0
                     else:
                         army.knights -= army_loose
-                        nb_knights_defenders -= army_loose
+                        #nb_knights_defenders -= army_loose
 
                         if int(battle_dice_aggressors) >= army.morale:
                             army.morale = 0
                             army.retreat()
-                            army.save()
                         else:
                             army.morale -= int(battle_dice_aggressors)
+                    army.save()
 
-                if nb_knights_defenders <= 0:
-                    battle.end()
-                    break
+                #if nb_knights_defenders <= 0:
+                #    battle.end()
 
                 aggressors = battle.aggressors
                 for army in aggressors:
-                    army_loose = int(army.knights * nb_knights_defenders * battle_dice_defenders / (500 * nb_knights_aggressors))
+                    army_loose = int(army.knights * nb_knights['defenders'] * battle_dice_defenders / (500 * nb_knights['aggressors']))
                     if army_loose >= army.knights:
-                        nb_knights_aggressors -= army.knights
+                        #nb_knights_aggressors -= army.knights
                         army.knights = 0
                     else:
                         army.knights -= army_loose
-                        nb_knights_aggressors -= army_loose
+                        #nb_knights_aggressors -= army_loose
 
                         if int(battle_dice_defenders) >= army.morale:
                             army.morale = 0
                             army.retreat()
-                            army.save()
                         else:
                             army.morale -= int(battle_dice_defenders)
+                    army.save()
 
-
-                if nb_knights_aggressors <= 0:
+                nb_knights = battle.counting_knights()
+                if nb_knights['aggressors'] <= 0 or nb_knights['defenders'] <= 0:
                     battle.end()
                 
-                battle.save()
+                
                 
     def a_star(self, current, end):
         if current == end:
@@ -406,7 +410,7 @@ class Model():
             if att_join:
                 result_join = self.list_qset_atts_2(qset, att_join)
 
-            print(result_join)
+            #print(result_join)
             return result_non_join + result_join
        
     def list_list_att(self, lis, att):
@@ -442,8 +446,7 @@ class Model():
         return res
 
     def list_qset_atts_2(self, qset, atts):
-        #att = atts[0].split('.')
-        t0 = time.perf_counter()
+        #t0 = time.perf_counter()
         if not qset:
             return []
         af = {}
@@ -496,11 +499,11 @@ class Model():
                 '$project':  pj
             }
         )
-        print (pipeline)
+        #print (pipeline)
 
         res = list(qset.aggregate(*pipeline))
-        t1 = time.perf_counter()
-        print (t1-t0)
+        #t1 = time.perf_counter()
+        #print (t1-t0)
         return res
 
     def get_player_person_title(self, player, opts):

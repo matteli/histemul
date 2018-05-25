@@ -26,13 +26,14 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 from mongoengine import Document, ListField, BooleanField, ReferenceField
 from battle import Battle
+from mongoengine.queryset.visitor import Q
 
 
 class War(Document):
 
+    active = BooleanField()
     aggressors = ListField(ReferenceField('Person'))
     defenders = ListField(ReferenceField('Person'))
-    active = BooleanField()
 
     @property
     def battles(self):

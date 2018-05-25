@@ -73,9 +73,9 @@ class Province(Document):
         return Battle.objects(location=self).first()
 
     @property
-    def armies(self):
+    def armies(self, select_related=1):
         #from army import Army
-        return Army.objects(location=self)
+        return Army.objects(location=self).select_related(select_related)
 
     @property
     def army(self):

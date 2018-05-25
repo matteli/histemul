@@ -51,8 +51,6 @@ class MongoJsonEncoder(json.JSONEncoder):
 def jsonify(*args, **kwargs):
     """ jsonify with support for MongoDB ObjectId
     """
-    #print (*args)
-    #print (**kwargs)
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
 
 app = Flask(__name__)
@@ -93,7 +91,7 @@ def requesting():
 
             msg = requestjs['msg']
             opt = requestjs['opt']
-            print(opt)
+            #print(opt)
             idd = requestjs['id']
             if player in engine.model.orders and engine.model.orders[player] and (msg, idd) in engine.model.orders[player][0]:
                 if type == 'get_status':

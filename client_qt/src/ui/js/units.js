@@ -155,9 +155,9 @@ ArmySpriteMap.prototype =
 
     __calculateDirection: function(origin, destination, attitude)
     {
-        if (attitude == 1)
+        if (attitude == 'aggressor')
             return (9);
-        if (attitude == 2)
+        if (attitude == 'defender')
             return (10);
         if (destination == undefined || destination == 0 || destination == origin)
             return (0);
@@ -269,12 +269,12 @@ ArmySpriteMap.prototype =
     {
         var deltaX = 0;
         var deltaY = 0;
-        if (attitude == 1)
+        if (attitude == 'aggressor')
         {
             deltaX = -30;
             deltaY = 30;
         }
-        else if (attitude == 2)
+        else if (attitude == 'defender')
         {
             deltaX = 30;
             deltaY = -30;

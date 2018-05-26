@@ -46,6 +46,7 @@ class Army(Document):
         self.next_province = None
         self.time_walking = 0
         self.way = []
+        self.save()
 
     def retreat(self):
         self.battle = None
@@ -54,3 +55,4 @@ class Army(Document):
         self.next_province = province
         self.way.append(province)
         self.time_walking = 0
+        self.save()

@@ -87,5 +87,7 @@ class Person(Document):
     def dead(self, date):
         if self.spouse:
             self.spouse.spouse = None
+            self.spouse.save()
             self.spouse = None
-        self.die = date.strftime('%Y,%m,%d')    
+        self.die = date.strftime('%Y,%m,%d')
+        self.save()

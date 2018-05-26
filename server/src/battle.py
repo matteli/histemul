@@ -53,14 +53,17 @@ class Battle(Document):
     def add_aggressor(self, army):
         army.battle = self
         army.attitude = 'aggressor'
+        army.save()
 
     def add_defender(self, army):
         army.battle = self
         army.attitude = 'defender'
+        army.save()
 
     def remove_army(self, army):
         army.battle = None
         army.attitude = 'normal'
+        army.save()
     
     def counting_knights(self):
         aggressors = 0
@@ -74,5 +77,6 @@ class Battle(Document):
 
     def end(self):
         self.active = False
-        for army in merge_qsets(self.defenders, self.aggressors):
+        self.save()
+        for army in self.armies:
             self.remove_army(army)

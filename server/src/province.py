@@ -92,7 +92,6 @@ class Province(Document):
         for province in self.adjacency:
             if province.land.is_walkable():
                 if i == r:
-                    print (province.idd)
                     return province
                 else:
                     i += 1

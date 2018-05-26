@@ -268,34 +268,15 @@ class Model():
         print("Start Update Battle")
         for battle in Battle.objects.select_related(3):
             if battle.active:
-                battle_dice_defenders = ((random.randrange(10) + 1)**2) / 4
-                battle_dice_aggressors = ((random.randrange(10) + 1)**2) / 4
+                battle_dice_defenders = ((random.randrange(10) + 1)**2) / 2
+                battle_dice_aggressors = ((random.randrange(10) + 1)**2) / 2
 
                 nb_knights = battle.counting_knights()
 
-                defenders = battle.defenders
-                for army in defenders:
-                    army_loose = int(army.knights * nb_knights['aggressors'] * battle_dice_aggressors / (500 * nb_knights['defenders']))
-                    if army_loose >= army.knights:
-                        #nb_knights_defenders -= army.knights
-                        army.knights = 0
-                    else:
-                        army.knights -= army_loose
-                        #nb_knights_defenders -= army_loose
-
-                        if int(battle_dice_aggressors) >= army.morale:
-                            army.morale = 0
-                            army.retreat()
-                        else:
-                            army.morale -= int(battle_dice_aggressors)
-                    army.save()
-
-                #if nb_knights_defenders <= 0:
-                #    battle.end()
-
                 aggressors = battle.aggressors
+                nb_army_aggressors = len(aggressors)
                 for army in aggressors:
-                    army_loose = int(army.knights * nb_knights['defenders'] * battle_dice_defenders / (500 * nb_knights['aggressors']))
+                    army_loose = int(army.knights * nb_knights['defenders'] * battle_dice_defenders / (400 * nb_knights['aggressors']))
                     if army_loose >= army.knights:
                         #nb_knights_aggressors -= army.knights
                         army.knights = 0
@@ -306,9 +287,31 @@ class Model():
                         if int(battle_dice_defenders) >= army.morale:
                             army.morale = 0
                             army.retreat()
+                            nb_army_aggressors -= 1
                         else:
                             army.morale -= int(battle_dice_defenders)
                     army.save()
+
+                defenders = battle.defenders
+                for army in defenders:
+                    army_loose = int(army.knights * nb_knights['aggressors'] * battle_dice_aggressors / (100 * nb_knights['defenders']))
+                    if army_loose >= army.knights:
+                        #nb_knights_defenders -= army.knights
+                        army.knights = 0
+                    else:
+                        army.knights -= army_loose
+                        #nb_knights_defenders -= army_loose
+
+                        if int(battle_dice_aggressors) >= army.morale:
+                            army.morale = 0
+                            if nb_army_aggressors:
+                                army.retreat()
+                        else:
+                            army.morale -= int(battle_dice_aggressors)
+                    army.save()
+
+                #if nb_knights_defenders <= 0:
+                #    battle.end()
 
                 nb_knights = battle.counting_knights()
                 if nb_knights['aggressors'] <= 0 or nb_knights['defenders'] <= 0:

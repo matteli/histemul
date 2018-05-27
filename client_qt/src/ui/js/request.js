@@ -116,7 +116,7 @@ function get(item, props, cls, id, atts, tabs, cache)
     //}
 }
 
-function getAll(item, cls, atts, id, sig)
+function getAll(item, cls, atts, id, sig, reset)
 {
 
     /*if ((cls in cache) && (id in  cache[cls]) && (prop in cache[cls][id])) {
@@ -133,6 +133,8 @@ function getAll(item, cls, atts, id, sig)
             if(http.readyState == 4 && http.status == 200) {
                 //console.info(http.responseText);
                 var res = JSON.parse(http.responseText);
+                if (reset)
+                    for (var member in item) delete item[member];
                 for (var r in res) {
                     var idd;
                     if (typeof res[r]['_id'] == 'object')

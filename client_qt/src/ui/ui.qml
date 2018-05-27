@@ -76,16 +76,16 @@ Item {
         {
             for (var i in armyFile)
                 armyFile[i] = false;
-            RQ.getAll(army, 'army', ['knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters');
-            RQ.getAll(army, 'army', ['for_the.player'], 'all', 'army_for_the');
-            RQ.getAll(province, 'province', ['population', 'siege', 'morale'], 'all', 'province_others_parameters');
+            RQ.getAll(army, 'army', ['for_the.player', 'knights', 'location', 'attitude', 'morale', 'way', 'next_province'], 'all', 'army_parameters', true);
+            //RQ.getAll(army, 'army', ['for_the.player'], 'all', 'army_for_the');
+            RQ.getAll(province, 'province', ['population', 'siege', 'morale'], 'all', 'province_others_parameters', false);
             map.updateLightMap();
         }
 
 
         Component.onCompleted:
         {
-            RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters');
+            RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters', false);
             RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'leader'})
         }
 
@@ -97,7 +97,7 @@ Item {
                 map.updateMap();
                 return;
             }
-            if (code == 'army_parameters' || code == 'army_for_the')
+            /*if (code == 'army_parameters' || code == 'army_for_the')
             {
                 armyFile[code] = true;
                 var ready = true;
@@ -107,7 +107,13 @@ Item {
                 if (ready)
                     armySprite.update();
                 return;
+            }*/
+            if (code == 'army_parameters')
+            {
+                armySprite.update();
+                return;
             }
+
             if (code == 'province_others_parameters')
             {
                 citySprite.update();

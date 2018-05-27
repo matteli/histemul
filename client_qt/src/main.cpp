@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
 {
     unsigned int width = 1024;
     unsigned int height = 768;
-    QString player ("Pierre");
+    QString player ("Matthieu");
     QUrl url("http://localhost:5000/");
-    bool fullScreen = false;
+    bool fullScreen = true;
 
 
     QApplication app(argc, argv);

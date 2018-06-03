@@ -1,6 +1,6 @@
 id_map;active;name;domain_of;land;culture;city_x;city_y;army_x;army_y;adjacency;sea_adjacency;manpower;population;size;defence;siege;morale;controller;war_siege
 0;True;PTI;null;TI;null;-1;-1;-1;-1;[];null;0;0;0;0;0;0;null;null
-1;True;Berquinais;Berquinais;prairie;France;550;1099;590;1139;[90,13,14,39];null;1000;5000;100;100;0;100;1;null
+1;True;Berquinais;Berquinais;prairie;France;550;1099;590;1139;[90,13,14,39];null;1000;5000;100;100;0;100;null;null
 2;False;Saguenis;Saguenis;prairie;France;575;711;615;751;[10,42,48,53,24,95];null;1000;5000;100;100;0;100;null;null
 3;False;Bata;Bata;mountains;Italia;1749;992;1789;1032;[98,140,47,150,151,88,58,28];null;1000;5000;100;100;0;100;null;null
 4;False;Saintguene;Saintguene;prairie;France;629;1475;669;1515;[39,168,40,7,46,114,51];null;1000;5000;100;100;0;100;null;null
@@ -13,7 +13,7 @@ id_map;active;name;domain_of;land;culture;city_x;city_y;army_x;army_y;adjacency;
 11;False;Aupatou;Aupatou;prairie;France;390;1251;430;1291;[39,46,54,90,155];null;1000;5000;100;100;0;100;null;null
 12;False;Sasache;Sasache;forest;France;978;637;1018;677;[67,71,9,173,57];null;1000;5000;100;100;0;100;null;null
 13;False;Chamraidie;Chamraidie;prairie;France;546;955;586;995;[1,42,14,50,90,95];null;1000;5000;100;100;0;100;null;null
-14;True;Orvence;Orvence;prairie;France;700;1033;740;1073;[1,34,5,39,42,13,15];null;1000;5000;100;100;0;100;2;null
+14;True;Orvence;Orvence;prairie;France;700;1033;740;1073;[1,34,5,39,42,13,15];null;1000;5000;100;100;0;100;null;null
 15;False;Marche;Marche;prairie;France;763;1245;803;1285;[34,39,40,74,14];null;1000;5000;100;100;0;100;null;null
 16;False;Bresachderberg;Bresachderberg;prairie;Deutschland;2480;53;2520;93;[38,44,56,127,93,63];null;1000;5000;100;100;0;100;null;null
 17;False;Niemern;Niemern;mountains;Deutschland;2947;581;2987;621;[128,6,105,112,19];null;1000;5000;100;100;0;100;null;null
@@ -38,7 +38,7 @@ id_map;active;name;domain_of;land;culture;city_x;city_y;army_x;army_y;adjacency;
 36;False;Porricenna;Porricenna;prairie;Italia;1489;1066;1529;1106;[130,28,150];null;1000;5000;100;100;0;100;null;null
 37;False;Reventia;Reventia;prairie;Italia;1603;434;1643;474;[169,45,79,20,121,159];null;1000;5000;100;100;0;100;null;null
 38;False;Rheinsachpommern;Rheinsachpommern;prairie;Deutschland;2673;138;2713;178;[77,16,82,56,25,31,63];null;1000;5000;100;100;0;100;null;null
-39;False;Bourquige;Bourquige;prairie;France;606;1265;646;1305;[1,4,40,11,46,14,15,90];null;1000;5000;100;100;0;100;3;null
+39;False;Bourquige;Bourquige;prairie;France;606;1265;646;1305;[1,4,40,11,46,14,15,90];null;1000;5000;100;100;0;100;null;null
 40;False;Lybonné;Lybonné;prairie;France;768;1417;808;1457;[4,7,39,74,15,80];null;1000;5000;100;100;0;100;null;null
 41;False;Toutaine;Toutaine;prairie;France;949;1062;989;1102;[34,5,74,21,91,60];null;1000;5000;100;100;0;100;null;null
 42;False;Rouche;Rouche;prairie;France;678;835;718;875;[2,5,9,13,14,48,95];null;1000;5000;100;100;0;100;null;null

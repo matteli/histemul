@@ -308,7 +308,7 @@ Item {
         property string shape: ""
         property string division: ""
         property var tinctures: ["white", "white"]
-        property int id: 0
+        property string id: ""
         onNameChanged: update();
         onNumberChanged: update();
         onTitleChanged: update();
@@ -337,7 +337,7 @@ Item {
         property string shape: ""
         property string division: ""
         property var tinctures: ["white", "white"]
-        property int id: 0
+        property string id: ""
         onNameChanged: update();
         onNumberChanged: update();
         onTitleChanged: update();

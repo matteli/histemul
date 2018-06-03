@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     unsigned int height = 768;
     QString player ("Matthieu");
     QUrl url("http://localhost:5000/");
-    bool fullScreen = true;
+    bool fullScreen = false;
 
 
     QApplication app(argc, argv);

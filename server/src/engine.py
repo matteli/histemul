@@ -32,11 +32,11 @@ import datetime
 
 
 class Engine(threading.Thread):
-    def __init__(self):
+    def __init__(self, reset, preset):
         threading.Thread.__init__(self)
         random.seed()
         self.terminated = False
-        self.model = Model()
+        self.model = Model(reset, preset)
         self.speed = 10.0 #update rate in seconds
         self.update_flag_tick = [threading.Event(), threading.Event()]
         self.update_flag_global = threading.Event()

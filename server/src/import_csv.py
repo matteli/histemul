@@ -30,15 +30,16 @@ def import_csv(file):
             print("saved")
 
 
-db = connect ('histemul')
-db.drop_database('histemul')
-connect ('histemul')
-import_csv('province.csv')
-import_csv('culture.csv')
-import_csv('title.csv')
-import_csv('land.csv')
-import_csv('player.csv')
-import_csv('person.csv')
+if __name__ == '__main__':
+    db = connect ('histemul')
+    db.drop_database('histemul')
+    connect ('histemul')
+    import_csv('province.csv')
+    import_csv('culture.csv')
+    import_csv('title.csv')
+    import_csv('land.csv')
+#import_csv('player.csv')
+#import_csv('person.csv')
 
 
 

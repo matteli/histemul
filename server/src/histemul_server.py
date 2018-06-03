@@ -54,7 +54,8 @@ def jsonify(*args, **kwargs):
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
 
 app = Flask(__name__)
-engine = Engine()
+engine = Engine(True, True)
+#engine = Engine()
 engine.start()
 
 @app.route('/', methods=['GET', 'POST'])

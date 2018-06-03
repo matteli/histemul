@@ -33,7 +33,6 @@ from functions import *
 class Battle(Document):
 
     war = ReferenceField('War')
-    location = ReferenceField('Province')
     active = BooleanField()
 
     @property
@@ -50,6 +49,12 @@ class Battle(Document):
     def armies(self):
         return Army.objects(battle=self)
 
+    @property
+    def location(self):
+        from province import Province
+        return Province.objects(location=self).first()
+
+
     def add_aggressor(self, army):
         army.battle = self
         army.attitude = 'aggressor'
@@ -65,17 +70,35 @@ class Battle(Document):
         army.attitude = 'normal'
         army.save()
     
-    def counting_knights(self):
+    def counting_knights(self, armies = None):
         aggressors = 0
         defenders = 0
-        for army in self.armies:
+        if not armies:
+            armies = self.armies
+        for army in armies:
             if army.attitude == 'defender':
                 defenders += army.knights
             elif army.attitude == 'aggressor':
                 aggressors += army.knights
         return {'aggressors': aggressors, 'defenders': defenders}
 
-    def end(self):
+    def determine_winner(self, armies = None):
+        if not armies:
+            armies = self.armies
+        nb_knights = self.counting_knights(armies)
+
+        if nb_knights['aggressors'] == 0 and nb_knights['defenders'] == 0:
+            self.end(winner='tie')
+            return True
+        elif nb_knights['aggressors'] == 0:
+            self.end(winner='defenders')
+            return True
+        elif nb_knights['defenders'] == 0:
+            self.end(winner='aggressors')
+            return True
+        return False
+
+    def end(self, winner):
         self.active = False
         self.save()
         for army in self.armies:

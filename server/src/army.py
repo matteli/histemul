@@ -49,10 +49,14 @@ class Army(Document):
         self.save()
 
     def retreat(self):
-        self.battle = None
-        self.attitude = 'retreat'
         province = self.location.get_random_walkable_adjacent()
-        self.next_province = province
-        self.way.append(province)
-        self.time_walking = 0
-        self.save()
+        if province:
+          self.battle = None
+          self.attitude = 'retreat'
+          self.next_province = province
+          self.way.append(province)
+          self.time_walking = 0
+          self.save()
+          return True
+        else:
+          return False

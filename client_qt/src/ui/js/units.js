@@ -28,9 +28,9 @@ THE POSSIBILITY OF SUCH DAMAGE.
 function ArmySpriteMap(sprite, RQ, province, army)
 {
     this.__army = army;
-    this.__armySprite = [];
-    this.__x0 = [];
-    this.__y0 = [];
+    this.__armySprite = {};
+    this.__x0 = {};
+    this.__y0 = {};
     this.__isInit = false;
     this.__RQ = RQ;
     this.__province = province;
@@ -210,58 +210,58 @@ ArmySpriteMap.prototype =
     __placeSprite: function()
     {
         //console.info("place sprites");
-        for (var id in this.__army)
+        for (var id in this.__armySprite)
         {
-
-            if (this.__armySprite.hasOwnProperty(id) && !this.__army[id]['knights'])
+            if (!this.__army.hasOwnProperty(id))
             {
                 this.__armySprite[id].destroy();
                 delete this.__armySprite[id];
                 delete this.__x0[id];
                 delete this.__y0[id];
             }
+        }
+
+        for (id in this.__army)
+        {
+            this.__x0[id] = this.__province[this.__army[id]['location']]['army_x'];
+            this.__y0[id] = this.__province[this.__army[id]['location']]['army_y'];
+            var attitude = this.__army[id]['attitude'];
+            var d = this.__delta(attitude)
+            var direction = this.__calculateDirection(this.__army[id]['location'], this.__army[id]['next_province'], attitude);
+            var knights = this.__army[id]['knights'];
+            var morale = this.__army[id]['morale'];
+            var for_the_player = this.__army[id]['for_the']['player'];
+            var way = this.__army[id]['way'];
+
+            if (!this.__armySprite.hasOwnProperty(id))
+            {
+                this.__armySprite[id] = this.__component.createObject(map, {
+                    "x": (this.__x0[id] - map.left + d[0]),
+                    "y":(this.__y0[id] - map.top + d[1]),
+                    "z":(this.__y0[id] - map.top + d[1]),
+                    //"iden":id,
+                    "selected": false,
+                    "direction":  direction,
+                    "knights": knights,
+                    "morale": morale,
+                    "attitude": attitude,
+                    "for_the_player": for_the_player,
+                    'way': way
+                });
+            }
             else
             {
-                this.__x0[id] = this.__province[this.__army[id]['location']]['army_x'];
-                this.__y0[id] = this.__province[this.__army[id]['location']]['army_y'];
-                var attitude = this.__army[id]['attitude'];
-                var d = this.__delta(attitude)
-                var direction = this.__calculateDirection(this.__army[id]['location'], this.__army[id]['next_province'], attitude);
-                var knights = this.__army[id]['knights'];
-                var morale = this.__army[id]['morale'];
-                var for_the_player = this.__army[id]['for_the']['player'];
-                var way = this.__army[id]['way'];
-
-                if (!this.__armySprite.hasOwnProperty(id))
-                {
-                    this.__armySprite[id] = this.__component.createObject(map, {
-                        "x": (this.__x0[id] - map.left + d[0]),
-                        "y":(this.__y0[id] - map.top + d[1]),
-                        "z":(this.__y0[id] - map.top + d[1]),
-                        //"iden":id,
-                        "selected": false,
-                        "direction":  direction,
-                        "knights": knights,
-                        "morale": morale,
-                        "attitude": attitude,
-                        "for_the_player": for_the_player,
-                        'way': way
-                    });
-                }
-                else
-                {
-                    //console.info("place sprite");
-                    this.__armySprite[id].x = this.__x0[id] - map.left + d[0];
-                    this.__armySprite[id].y = this.__y0[id] - map.top + d[1];
-                    this.__armySprite[id].z = this.__y0[id] - map.top + d[1];
-                    //this.__armySprite[id].iden = id;
-                    this.__armySprite[id].direction = direction;
-                    this.__armySprite[id].knights = knights;
-                    this.__armySprite[id].morale = morale;
-                    this.__armySprite[id].attitude = attitude;
-                    this.__armySprite[id].for_the_player = for_the_player;
-                    this.__armySprite[id].way = way;
-                }
+                //console.info("place sprite");
+                this.__armySprite[id].x = this.__x0[id] - map.left + d[0];
+                this.__armySprite[id].y = this.__y0[id] - map.top + d[1];
+                this.__armySprite[id].z = this.__y0[id] - map.top + d[1];
+                //this.__armySprite[id].iden = id;
+                this.__armySprite[id].direction = direction;
+                this.__armySprite[id].knights = knights;
+                this.__armySprite[id].morale = morale;
+                this.__armySprite[id].attitude = attitude;
+                this.__armySprite[id].for_the_player = for_the_player;
+                this.__armySprite[id].way = way;
             }
         }
     },

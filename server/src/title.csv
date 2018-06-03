@@ -1,5 +1,5 @@
 name;level;suzerain;holder;name_number
-Berquinais;1;null;1;{'Robert': 1}
+Berquinais;1;null;null;{}
 Saguenis;1;null;null;{}
 Bata;1;null;null;{}
 Saintguene;1;null;null;{}
@@ -12,7 +12,7 @@ Aldie;1;null;null;{}
 Aupatou;1;null;null;{}
 Sasache;1;null;null;{}
 Chamraidie;1;null;null;{}
-Orvence;1;null;2;{'Jean': 1}
+Orvence;1;null;null;{}
 Marche;1;null;null;{}
 Bresachderberg;1;null;null;{}
 Niemern;1;null;null;{}
@@ -37,7 +37,7 @@ Durtinghamland;1;null;null;{}
 Porricenna;1;null;null;{}
 Reventia;1;null;null;{}
 Rheinsachpommern;1;null;null;{}
-Bourquige;1;null;3;{'Philippe': 1}
+Bourquige;1;null;null;{}
 Lybonné;1;null;null;{}
 Toutaine;1;null;null;{}
 Rouche;1;null;null;{}

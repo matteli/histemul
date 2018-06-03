@@ -37,10 +37,12 @@ from mongoengine import connect, QuerySet
 import random
 import time
 from functions import *
+import datetime
+from pymongo import MongoClient
 
 
 class Model():
-    def __init__(self):
+    def __init__(self, reset=False, preset=False):
         self.model = {
             'army': Army,
             'battle': Battle,
@@ -54,6 +56,58 @@ class Model():
         }
         connect('histemul')
         self.orders = {}
+        
+        if reset:
+            client = MongoClient()
+            db = client.histemul
+            Player.drop_collection()
+            Person.drop_collection()
+            Army.drop_collection()
+            Battle.drop_collection()
+            War.drop_collection()
+
+            Province.drop_collection()
+            #collection = db.province_vo
+            db.command('aggregate', 'province_vo', pipeline= [ { '$match': {} }, { '$out': "province" } ], allowDiskUse=True, cursor={})
+            if preset:
+                Matthieu = self.new_player('Matthieu', division='fess', tinctures=['green','orange'])
+                Pierre = self.new_player('Pierre', division='pale', tinctures=['blue','red'])
+                Robert = self.new_person('Robert', True, datetime.date(975,1,1), Matthieu, 1)
+                Jean = self.new_person('Jean', True, datetime.date(981,1,1), Pierre, 14)
+                Philippe = self.new_person('Philippe', True, datetime.date(965,1,1), Pierre, 39)
+                Matthieu.leader = Robert
+                Matthieu.save()
+                Pierre.leader = Jean
+                Pierre.save()
+
+                Berquinais = Title.objects.get(pk='Berquinais')
+                Berquinais.holder = Robert
+                Berquinais.name_number = {'Robert': 1}
+                Berquinais.save()
+
+                Orvence = Title.objects.get(pk='Orvence')
+                Orvence.holder = Jean
+                Orvence.name_number = {'Jean': 1}
+                Orvence.save()
+
+                Bourquige = Title.objects.get(pk='Bourquige')
+                Bourquige.holder = Philippe
+                Bourquige.name_number = {'Philippe': 1}
+                Bourquige.save()
+
+                Berquinais_province = Province.objects.get(name='Berquinais')
+                Berquinais_province.controller = Robert
+                Berquinais_province.save()
+
+                Orvence_province = Province.objects.get(name='Orvence')
+                Orvence_province.controller = Jean
+                Orvence_province.save()
+
+                Bourquige_province = Province.objects.get(name='Bourquige')
+                Bourquige_province.controller = Philippe
+                Bourquige_province.save()
+
+                Army_Orvence = self.rally_troops(Pierre, Orvence_province, 'execute')
 
     def end_order(self, status):
         if status == 'order':
@@ -102,8 +156,16 @@ class Model():
         return self.end_order(status)
         #return self.list_list_att(way, 'id_map')
 
+    def new_person(self, name, male, born, player, location, father=None, mother=None):
+        return Person.objects.create(name=name, male=male, born=born, player=player, location=location, father=father, mother=mother)
+
+    def new_player(self, name, leader=None, shape='triangle', division='plain', tinctures=['blue', 'red']):
+        return Player.objects.create(name=name, leader=leader, shape=shape, division=division, tinctures=tinctures)
+
     def new_battle(self, war, location, aggressors, defenders):
-        battle = Battle.objects.create(war=war, location=location, active=True)
+        battle = Battle.objects.create(war=war, active=True)
+        location.battle = battle
+        location.save()
         for aggressor in aggressors:
             aggressor.battle = battle
             aggressor.attitude = 'aggressor'
@@ -149,91 +211,94 @@ class Model():
                 order = orders.pop()
                 self.make_orders(player, order[0][0], order[0][1], order[1], 'execute')
         print("Start Update Army")
+        armies = Army.objects.select_related(3)
         #army
-        for army in Army.objects.select_related(3):
-            if army.knights:
-                if army.way and army.next_province != army.way[-1]:
+        for army in armies:
+            if army.way and army.next_province != army.way[-1]: #change way since last update
+                army.next_province = army.way[-1]
+                army.time_walking = 0
+
+            if army.location == None:
+                pass
+            if army.time_walking >= army.location.size: #enter a new province
+                army.time_walking -= army.location.size
+                province = army.next_province
+                army.location = province
+                army.way.pop()
+                if army.way:
                     army.next_province = army.way[-1]
-                    army.time_walking = 0
-
-                if army.time_walking >= army.location.size: #enter a new province
-                    province = army.next_province
-                    army.location = province
-                    army.way.pop()
-                    if army.way:
-                        army.next_province = army.way[-1]
-                    else:
-                        army.next_province = None
-                        army.attitude = 'normal'
-                    army.time_walking -= army.location.size
-                    #when enter a new province, look if there is enemy or already a battle
-                    person = army.for_the
-                    if not province.battle:
-                        war = None
-                        enemies = []
-                        for army_in_province in province.armies:
-                            if not war:
-                                war = person.in_war_against(army_in_province.for_the)['war']
-                                enemies.append(army_in_province)
-                            else:
-                                w = person.in_war_against(army_in_province.for_the)[0]['war']
-                                if w == war:
-                                    enemies.append(army_in_province)
-                        if enemies: #enemy so battle
-                            army.stop()
-                            self.new_battle(war, province, [army], enemies)
-
-                    else:
-                        battle = province.battle
-                        war = battle.war
-                        if person in war.aggressors:
-                            army.stop()
-                            battle.add_defender(army)
-                        if person in war.defenders:
-                            army.stop()
-                            battle.add_aggressor(army)
-
-                if army.next_province:
-                    army.time_walking += 500 * army.location.land.walkable
                 else:
-                    army.time_walking = 0
+                    army.next_province = None
+                    army.attitude = 'normal'
 
-                #morale
-                if army.attitude == 'normal':
-                    if army.morale < 95:
-                        army.morale += 5
-                    else:
-                        army.morale = 100
-                
-                army.save()
+                #when enter a new province, look if there is enemy or already a battle
+                person = army.for_the
+                battle = province.battle
+
+                if not battle:
+                    war = None
+                    enemies = []
+                    for army_in_province in province.armies:
+                        if not war:
+                            war = person.in_war_against(army_in_province.for_the)['war']
+                            enemies.append(army_in_province)
+                        else:
+                            w = person.in_war_against(army_in_province.for_the)[0]['war']
+                            if w == war:
+                                enemies.append(army_in_province)
+                    if enemies: #enemy so battle
+                        army.stop()
+                        self.new_battle(war, province, [army], enemies)
+
+                else:
+                    war = battle.war
+                    if person in war.aggressors:
+                        army.stop()
+                        battle.add_aggressor(army)
+                    if person in war.defenders:
+                        army.stop()
+                        battle.add_defender(army)
+
+            if army.next_province:
+                army.time_walking += 500 * army.location.land.walkable
+            else:
+                army.time_walking = 0
+
+            #morale
+            if army.attitude == 'normal':
+                if army.morale < 95:
+                    army.morale += 5
+                else:
+                    army.morale = 100
+            
+            army.save()
 
         print("Start Update Province")
         for province in Province.objects.select_related(3):
             province_war_siege_knights = 0            
-            if province.armies:
-                if province.battle and province.battle.active:
-                    province.war_siege = None
-                elif province.controller:
-                    if province.war_siege:
-                        war = province.war_siege
-                        for enemy in war.get_enemies(province.controller):
-                            for army in province.armies:
-                                if army.for_the == enemy:
-                                    province_war_siege_knights += army.knights
-                        if province_war_siege_knights == 0:
-                            province.war_siege = None
-                            province.siege = 0
-                    else:
-                        for war in province.controller.wars:
-                            for enemy_country in war.get_enemies(province.controller):
-                                for army in province.armies:
-                                    if army.for_the == enemy_country and army.attitude == 'normal':
-                                        province_war_siege_knights += army.knights
-                                        province.war_siege = war
-                                        province.siege = 1
+            if province.battle and province.battle.active:
+                province.war_siege = None
+            elif province.controller:
+                if province.war_siege:
+                    war = province.war_siege
+                    for enemy in war.get_enemies(province.controller):
+                        for army in province.armies:
+                            if army.for_the == enemy:
+                                province_war_siege_knights += army.knights
+                    if province_war_siege_knights == 0:
+                        province.war_siege = None
+                        province.siege = 0
                 else:
-                    province.war_siege = None
-                    province.siege = 0
+                    for war in province.controller.wars:
+                        for enemy_country in war.get_enemies(province.controller):
+                            for army in province.armies:
+                                if army.for_the == enemy_country and army.attitude == 'normal':
+                                    province_war_siege_knights += army.knights
+                                    province.war_siege = war
+                                    province.siege = 1
+            else:
+                province.war_siege = None
+                province.siege = 0
 
             if province.land.is_walkable():
                 war = province.war_siege
@@ -261,46 +326,31 @@ class Model():
                 battle_dice_defenders = ((random.randrange(10) + 1)**2) / 2
                 battle_dice_aggressors = ((random.randrange(10) + 1)**2) / 2
 
-                nb_knights = battle.counting_knights()
+                armies = battle.armies
+                nb_knights = battle.counting_knights(armies)
 
-                aggressors = battle.aggressors
-                nb_army_aggressors = len(aggressors)
-                for army in aggressors:
-                    army_loose = int(army.knights * nb_knights['defenders'] * battle_dice_defenders / (400 * nb_knights['aggressors']))
-                    if army_loose >= army.knights:
+                for army in armies:
+                    if army.attitude == 'aggressor':
+                        army.knights -= int(army.knights * nb_knights['defenders'] * battle_dice_defenders / (400 * nb_knights['aggressors']))
+                        army.morale -= int(battle_dice_defenders)
+                    elif army.attitude == 'defender':
+                        army.knights -= int(army.knights * nb_knights['aggressors'] * battle_dice_aggressors / (100 * nb_knights['defenders']))
+                        army.morale -= int(battle_dice_aggressors)
+                    if army.morale < 0:
+                        army.morale = 0
+                    army.save()
+                    if army.knights <= 0:
                         army.delete()
-                    else:
-                        army.knights -= army_loose
-
-                        if int(battle_dice_defenders) >= army.morale:
-                            army.morale = 0
+                        
+                armies = battle.armies
+                if not battle.determine_winner(armies):
+                    for army in armies:
+                        if army.morale == 0:
                             army.retreat()
-                            nb_army_aggressors -= 1
-                        else:
-                            army.morale -= int(battle_dice_defenders)
-                        army.save()
+                            army.save()
 
-                defenders = battle.defenders
-                for army in defenders:
-                    army_loose = int(army.knights * nb_knights['aggressors'] * battle_dice_aggressors / (100 * nb_knights['defenders']))
-                    if army_loose >= army.knights:
-                        army.delete()
-                    else:
-                        army.knights -= army_loose
-
-                        if int(battle_dice_aggressors) >= army.morale:
-                            army.morale = 0
-                            if nb_army_aggressors:
-                                army.retreat()
-                        else:
-                            army.morale -= int(battle_dice_aggressors)
-                        army.save()
-
-                nb_knights = battle.counting_knights()
-                if nb_knights['aggressors'] <= 0 or nb_knights['defenders'] <= 0:
-                    battle.end()
-                
-                
+                battle.determine_winner(armies)
+    
     def a_star(self, current, end):
         if current == end:
             return []

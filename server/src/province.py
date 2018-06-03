@@ -33,7 +33,6 @@ from person import Person
 from title import Title
 from war import War
 from battle import Battle
-from army import Army
 
 
 class Province(Document):
@@ -56,6 +55,7 @@ class Province(Document):
     size = IntField(default=1000)
     controller = ReferenceField('Person')
     war_siege = ReferenceField('War')
+    battle = ReferenceField('Battle')
     defence = IntField(default=0)
     siege = IntField(default=0)
     morale = IntField(default=100)
@@ -68,14 +68,11 @@ class Province(Document):
         return Person.objects(location=self)
 
     @property
-    def battle(self):
-        #from battle import Battle
-        return Battle.objects(location=self).first()
-
-    @property
-    def armies(self, select_related=1):
-        #from army import Army
-        return Army.objects(location=self).select_related(select_related)
+    def armies(self, armies=None, select_related=1):
+        if not armies:
+            from army import Army
+            return Army.objects(location=self).select_related(select_related)
+        return armies.filter(location=self)
 
     @property
     def army(self):

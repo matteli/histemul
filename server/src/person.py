@@ -31,7 +31,6 @@ from army import Army
 
 class Person(Document):
 
-    id = IntField(primary_key=True)
     name = StringField()
     born = ComplexDateTimeField()
     die = ComplexDateTimeField()

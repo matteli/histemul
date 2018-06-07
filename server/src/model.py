@@ -271,6 +271,9 @@ class Model():
 
         print("Start update province")
         for province in Province.objects.select_related(3):
+            if province.domain_of:
+                province.domain_of.treasure += 10
+                province.domain_of.save()
             province_war_siege_knights = 0            
             if province.battle and province.battle.active:
                 province.war_siege = None
@@ -579,6 +582,14 @@ class Model():
             except:
                 return {}
             person = province.domain_of.holder
+            player2 = person.player
+
+        elif opts['type'] == 'person':
+            try:
+                person = Person.objects.get(pk=opts['person'])
+            except:
+                return {}
+            response['treasure'] = person.treasure
             player2 = person.player
         else:
             return {}

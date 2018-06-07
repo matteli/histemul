@@ -314,12 +314,15 @@ Item {
         onNumberChanged: update();
         onTitleChanged: update();
         onLevelChanged: update();
+        onTreasureChanged: update()
         onShapeChanged: updateArmory();
         onDivisionChanged: updateArmory();
         onTincturesChanged: updateArmory();
         function update()
         {
-            selectedPersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title
+            selectedPersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title;
+            rowTopMenu.level = level;
+            selectedPersonTreasury.text = treasure;
         }
         function updateArmory()
         {
@@ -349,7 +352,6 @@ Item {
         function update()
         {
             selectedProvincePersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title
-            rowTopMenu.level = level
         }
         function updateArmory()
         {
@@ -369,6 +371,7 @@ Item {
             RQ.getUpdate(clock, 'tick', tick+1);
             map.updateMap();
             root.updateInfoBar();
+            root.updateTopBar();
         }
     }
 
@@ -386,7 +389,7 @@ Item {
 
     function updateTopBar()
     {
-
+        RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'treasure', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'person', 'person': selectedPerson.id})
     }
 
     function updatePeaceBar()

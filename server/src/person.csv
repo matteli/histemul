@@ -1,4 +1,0 @@
-id;name;male;born;die;father;mother;player;location
-1;Robert;true;1000,03,23;null;null;null;Matthieu;1
-2;Jean;true;1000,03,23;null;null;null;Pierre;14
-3;Philippe;true;1000,03,23;null;null;null;Pierre;39

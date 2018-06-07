@@ -25,7 +25,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
 import random
-from model2 import Model
+from model import Model
 import threading
 import time
 import datetime

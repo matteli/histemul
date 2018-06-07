@@ -86,7 +86,7 @@ Item {
         Component.onCompleted:
         {
             RQ.getAll(province, 'province', ['army_x', 'army_y', 'city_x', 'city_y', 'land'], 'all', 'province_fixed_parameters', false);
-            RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'leader'})
+            RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'treasure', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'leader'})
         }
 
         onFilesReceived:
@@ -305,6 +305,7 @@ Item {
         property int number: 1
         property string title: ""
         property int level: 1
+        property int treasure: 0
         property string shape: ""
         property string division: ""
         property var tinctures: ["white", "white"]
@@ -348,6 +349,7 @@ Item {
         function update()
         {
             selectedProvincePersonText.text = name + ' ' + FC.a2r(number) + ' of ' + title
+            rowTopMenu.level = level
         }
         function updateArmory()
         {
@@ -477,8 +479,15 @@ Item {
         style: 1
         Row{
             id: rowTopMenu
-            y: 15
+            y: 10
             x: 15
+            spacing: 5
+            property int level: 1
+            Image{
+                source: "gfx/gui/crown_" + parent.level + ".png"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
             Text
             {
                 id: selectedPersonText
@@ -489,7 +498,29 @@ Item {
                 font.family: "Linux Biolinum"
                 font.bold: true
                 color: colorFont
+                anchors.verticalCenter: parent.verticalCenter
+
             }
+            Image{
+                source: "gfx/gui/coin.png"
+                anchors.verticalCenter: parent.verticalCenter
+
+            }
+
+            Text
+            {
+                id: selectedPersonTreasury
+                text: "0"
+                renderType: Text.NativeRendering
+                wrapMode: Text.Wrap
+                font.pointSize: 18
+                font.family: "Linux Biolinum"
+                font.bold: true
+                color: colorFont
+                anchors.verticalCenter: parent.verticalCenter
+
+            }
+
         }
 
     }
@@ -583,7 +614,7 @@ Item {
                     id: selectedProvincePersonShield
                     MouseArea{
                         anchors.fill: parent
-                        onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'home_province', 'province': provinceSelected})
+                        onClicked: RQ.getInFunction(selectedPerson, ['name', 'number', 'title', 'treasure', 'level', 'shape', 'division', 'tinctures', 'id'], 'player_person_title', {'type': 'home_province', 'province': provinceSelected})
                     }
                 }
 

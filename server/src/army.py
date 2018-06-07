@@ -46,7 +46,7 @@ class Army(Document):
         self.next_province = None
         self.time_walking = 0
         self.way = []
-        self.save()
+        #self.save()
 
     def retreat(self):
         province = self.location.get_random_walkable_adjacent()
@@ -56,7 +56,7 @@ class Army(Document):
           self.next_province = province
           self.way.append(province)
           self.time_walking = 0
-          self.save()
+          #self.save()
           return True
         else:
           return False

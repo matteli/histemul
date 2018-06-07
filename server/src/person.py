@@ -24,7 +24,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-from mongoengine import Document, IntField, StringField, ComplexDateTimeField, ReferenceField, ListField, BooleanField
+from mongoengine import Document, IntField, StringField, DateTimeField, ReferenceField, ListField, BooleanField
 from mongoengine.queryset.visitor import Q
 from army import Army
 
@@ -32,11 +32,13 @@ from army import Army
 class Person(Document):
 
     name = StringField()
-    born = ComplexDateTimeField()
-    die = ComplexDateTimeField()
+    born = DateTimeField()
+    die = DateTimeField()
     father = ReferenceField('self')
     mother = ReferenceField('self')
     male = BooleanField()
+    pregnant = BooleanField()
+    fertility = BooleanField()
     spouse = ReferenceField('self')
     player = ReferenceField('Player')
     location = ReferenceField('Province')
@@ -65,13 +67,20 @@ class Person(Document):
         #from army import Army
         return Army.objects(for_the=self)
 
-    def get_married_with(self, spouse):
+    @property
+    def treasure(self):
+        treasure = 0
+        for title in self.titles:
+            treasure += title.treasure
+        return treasure
+
+    def is_married_with(self, spouse):
         if not (self.male==spouse.male):
             self.spouse = spouse
             spouse = self
             return True
         return False
-    
+
     def in_war_against(self, person):
         for war in self.wars:
             if self in war.aggressors:
@@ -81,12 +90,17 @@ class Person(Document):
                 if person in war.aggressors:
                     return {'war': war, 'attitude': 'defender'}
         return None
-            
 
+    def age(self, date):
+        return date.year - self.born.year - ((date.month, date.day) < (self.born.month, self.born.day))
+
+    #methods
     def dead(self, date):
         if self.spouse:
             self.spouse.spouse = None
             self.spouse.save()
             self.spouse = None
-        self.die = date.strftime('%Y,%m,%d')
+        self.die = date
         self.save()
+
+

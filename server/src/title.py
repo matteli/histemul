@@ -36,7 +36,6 @@ class Title(Document):
     suzerain = ReferenceField('self')
     holder = ReferenceField('Person')
     name_number = DictField()
-    treasure = IntField()
 
     @property
     def vassals(self):

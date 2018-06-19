@@ -42,6 +42,7 @@ class Person(Document):
     spouse = ReferenceField('self')
     player = ReferenceField('Player')
     location = ReferenceField('Province')
+    treasure = IntField(default=0)
 
     @property
     def wars(self):
@@ -67,12 +68,9 @@ class Person(Document):
         #from army import Army
         return Army.objects(for_the=self)
 
-    @property
-    def treasure(self):
-        treasure = 0
-        for title in self.titles:
-            treasure += title.treasure
-        return treasure
+    @classmethod
+    def new(cls, name, male, born, player, location, father=None, mother=None):
+        return cls.objects.create(name=name, male=male, born=born, player=player, location=location, father=father, mother=mother)
 
     def is_married_with(self, spouse):
         if not (self.male==spouse.male):
@@ -94,7 +92,6 @@ class Person(Document):
     def age(self, date):
         return date.year - self.born.year - ((date.month, date.day) < (self.born.month, self.born.day))
 
-    #methods
     def dead(self, date):
         if self.spouse:
             self.spouse.spouse = None
@@ -103,4 +100,13 @@ class Person(Document):
         self.die = date
         self.save()
 
-
+    def update(self, date):
+        if not self.male and not self.pregnant and self.spouse and self.location==self.spouse.location:
+            if bool_random(self.fertility*self.spouce.fertility*0.1):
+                male = bool_random(0.5)
+                if male:
+                    list_name = self.location.culture.male_name
+                else:
+                    list_name = self.location.culture.female_name
+                name = random.choice(list_name)
+                Person.new(name, male, date, self.player, self.location, self.spouse, self)

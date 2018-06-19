@@ -28,7 +28,6 @@ function a2r( nb ){
             break;
         }
     }
-
     return str;
 }
 

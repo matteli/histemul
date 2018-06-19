@@ -23,8 +23,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
 function ArmySpriteMap(sprite, RQ, province, army)
 {
     this.__army = army;
@@ -281,5 +279,4 @@ ArmySpriteMap.prototype =
         }
         return ([deltaX, deltaY])
     },
-
 }

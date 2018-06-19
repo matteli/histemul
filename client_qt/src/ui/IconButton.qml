@@ -8,7 +8,6 @@ MouseArea {
     property string sourceImage: ''
     property string status: 'hidden'
     visible: (status != 'hidden')
-    //property bool active: true
     hoverEnabled: status=="normal"?true:false
     onEntered: timerToolTip.start()
     onExited: {

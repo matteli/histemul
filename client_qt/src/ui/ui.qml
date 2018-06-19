@@ -525,7 +525,6 @@ Item {
             }
 
         }
-
     }
 
     Comp.Background {
@@ -554,8 +553,10 @@ Item {
             visible: false
             Row
             {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 100
                 Comp.IconButton{
-                    toolTip: 'Cancel'
+                    toolTip: 'Back'
                     sourceImage: 'gfx/gui/arrow.png'
                     status: 'normal'
                     onClicked:{
@@ -564,18 +565,21 @@ Item {
                     }
                 }
                 Comp.IconButton{
+                    id: offerPeaceButton
                     toolTip: 'Offer peace'
                     sourceImage: 'gfx/gui/peace.png'
                     status: 'normal'
                     onClicked:{
+                        RQ.postMsg(offerPeaceButton, 'status', 'offer_peace', root.provinceSelected);
                         peaceBar.visible = false;
                         infoBar.visible = true;
                     }
                 }
-
             }
             Row
             {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 60
                 Image {
                     source: "gfx/gui/wood_square.png"
                     Comp.Shield {
@@ -583,9 +587,9 @@ Item {
                     }
                 }
 
-                Image {
+                /*Image {
                     source: "gfx/gui/peace_arrow.png"
-                }
+                }*/
 
                 Image {
                     source: "gfx/gui/wood_square.png"
@@ -597,9 +601,24 @@ Item {
             }
             Row
             {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: 10
+                Image{
+                    source: "gfx/gui/coin.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
                 SpinBox {
+                    from: -100000
+                    to: selectedPerson.treasure
+                    stepSize: 100
+                    editable: true
 
                 }
+                Image{
+                    source: "gfx/gui/coin.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
             }
         }
 
@@ -710,6 +729,5 @@ Item {
             }
         }
     }
-
 }
 

@@ -25,8 +25,10 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
+import datetime
+from flask import Flask, request, Response
+from bson.objectid import ObjectId
 from engine import Engine
-from flask import Flask, request
 
 try:
     import simplejson as json
@@ -35,9 +37,6 @@ except ImportError:
         import json
     except ImportError:
         raise ImportError
-import datetime
-from bson.objectid import ObjectId
-from flask import Response
 
 
 class MongoJsonEncoder(json.JSONEncoder):
@@ -48,7 +47,7 @@ class MongoJsonEncoder(json.JSONEncoder):
             return str(obj)
         return json.JSONEncoder.default(self, obj)
 
-def jsonify(*args, **kwargs):
+def jsonify(*args):
     """ jsonify with support for MongoDB ObjectId
     """
     return Response(json.dumps(*args, cls=MongoJsonEncoder), mimetype='application/json')
@@ -60,41 +59,36 @@ engine.start()
 
 @app.route('/', methods=['GET', 'POST'])
 def requesting():
+    """
+        request from client arrive here.
+    """
     if request.method == 'POST':
         if request.is_json:
             requestjs = request.get_json()
             player = requestjs['player']
-            type = requestjs['type']
-        else:
-            player = request.form['player']
-            type = request.form['type']
-        print (requestjs)
+            typerq = requestjs['type']
+        print(requestjs)
 
-        if type == 'get' or type == 'get_all':
+        if typerq == 'get' or typerq == 'get_all':
             cls = requestjs['cls']
             atts = requestjs['atts']
             idd = requestjs['id']
+            return jsonify(engine.model.get_in_model(typerq, player, cls, atts, idd))
 
-            '''try:
-                idd = int(idd)
-            except:
-                pass'''
-            return jsonify(engine.model.get_in_model(type, player, cls, atts, idd))
-
-        elif type == 'get_status' or type == 'post_msg':
+        elif typerq == 'get_status' or typerq == 'post_msg':
             response = {}
             prop = requestjs['prop']
             if not engine.update_flag_global.is_set():
-                if type == 'get_status':
+                if typerq == 'get_status':
                     response[prop] = 'disabled'
                 else:
                     response[prop] = 'rejected'
 
             msg = requestjs['msg']
             opt = requestjs['opt']
-            #print(opt)
+            print(opt)
             idd = requestjs['id']
-            if player in engine.model.orders and engine.model.orders[player] and (msg, idd) in engine.model.orders[player][0]:
+            '''if player in engine.model.orders and engine.model.orders[player] and (msg, idd) in engine.model.orders[player][0]:
                 if type == 'get_status':
                     response[prop] = 'accepted'
                 else:
@@ -104,10 +98,10 @@ def requesting():
                     result = engine.model.make_orders(player, msg, idd, opt, 'test')
                 else:
                     result = engine.model.make_orders(player, msg, idd, opt, 'order')
-                response[prop] = result
-            return jsonify(response)
+                response[prop] = result'''
+            return jsonify(engine.model.post_in_model(prop, typerq, player, msg, opt, idd))
 
-        elif type == 'get_update':
+        elif typerq == 'get_update':
             response = {}
             prop = requestjs['prop']
             num = requestjs['num']
@@ -119,10 +113,12 @@ def requesting():
             response[prop] = engine.tick
             return jsonify(response)
 
-        elif type == 'get_in_function':
+        elif typerq == 'get_in_function':
             response = {}
             func = requestjs['func']
             opts = requestjs['opts']
-            if func=='player_person_title':
+            if func == 'player_person_title':
                 response = engine.model.get_player_person_title(player, opts)
-            return jsonify(response)            
+            return jsonify(response)
+
+    return jsonify({})

@@ -71,7 +71,6 @@ FixedSpriteMap.prototype =
             console.log("Army sprite not initialized.");
         }
     },
-
     __placeSprite: function()
     {
         /*if (this.__isInit)

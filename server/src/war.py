@@ -45,6 +45,10 @@ class War(Document):
         from province import Province
         return Province.objects(war_siege=self)
 
+    @classmethod
+    def new(cls, aggressor, defender):
+        return cls.objects.create(aggressors=[aggressor], defenders=[defender], active=True)
+
     def get_allies(self, person):
         for p in self.aggressors:
             if p == person:

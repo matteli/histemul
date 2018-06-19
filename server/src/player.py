@@ -41,3 +41,7 @@ class Player(Document):
     def controlled(self):
         #from person import Person
         return Person.objects(player=self)
+
+    @classmethod
+    def new(cls, name, leader=None, shape='triangle', division='plain', tinctures=['blue', 'red']):
+        return cls.objects.create(name=name, leader=leader, shape=shape, division=division, tinctures=tinctures)

@@ -28,7 +28,6 @@ import "./" as Comp
 
 
 Rectangle{
-
     //property int iden: 0
     property int direction: 0
     property bool selected: false
@@ -59,9 +58,6 @@ Rectangle{
         NumberAnimation {duration: 100}
         enabled: !map.moved
     }*/
-
-
-
 
     Comp.AnimatedUnits{
         id: standUp
@@ -203,6 +199,7 @@ Rectangle{
         frameRate: 10
         //source: "gfx/flags/flag_" + model.getName("Country", model.get("Army", iden,"country")[1]) + ".png"
     }
+
     Rectangle{
         x: -20
         y: 6
@@ -213,8 +210,6 @@ Rectangle{
         color: Qt.hsla(morale/300,1,0.5,1)
         width: 0.03*knights
     }
-
-
 
     Text{
         visible: selected

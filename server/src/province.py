@@ -92,3 +92,89 @@ class Province(Document):
                     return province
                 else:
                     i += 1
+
+    def a_star(self, end):
+        if self == end:
+            return []
+        open_list = set()
+        closed_list = set()
+        start = self
+
+        def retrace_path(c):
+            path = []
+            path.append(c)
+            while c.parent is not start:
+                c = c.parent
+                path.append(c)
+            return path
+        open_list.add(self)
+        while open_list:
+            self = sorted(open_list, key=lambda inst:inst.f)[0]
+            if self == end:
+                return retrace_path(self)
+            open_list.remove(self)
+            closed_list.add(self)
+            for adja in self.adjacency:
+                if adja.land.walkable > 0 and adja not in closed_list:
+                    temp_g = self.g + self.size/(2*self.land.walkable) + adja.size/(2*self.land.walkable)
+                    if adja not in open_list:
+                        open_list.add(adja)
+                        adja.parent = self
+                        adja.g = temp_g
+                        adja.f = adja.g + (abs(end.army_x-adja.army_x)+abs(end.army_y-adja.army_y))/100
+                    else:
+                        if temp_g < adja.g :
+                            adja.parent = self
+                            adja.g = temp_g
+                            adja.f = adja.g + (abs(end.army_x-adja.army_x)+abs(end.army_y-adja.army_y))/100
+        return []
+
+    def update(self, date):
+        if self.domain_of and self.domain_of.holder:
+            self.domain_of.holder.treasure += 10
+            self.domain_of.holder.save()
+
+        province_war_siege_knights = 0            
+        if self.battle and self.battle.active:
+            self.war_siege = None
+        elif self.controller:
+            if self.war_siege:
+                war = self.war_siege
+                for enemy in war.get_enemies(self.controller):
+                    for army in self.armies:
+                        if army.for_the == enemy:
+                            province_war_siege_knights += army.knights
+                if province_war_siege_knights == 0:
+                    self.war_siege = None
+                    self.siege = 0
+            else:
+                for war in self.controller.wars:
+                    for enemy_country in war.get_enemies(self.controller):
+                        for army in self.armies:
+                            if army.for_the == enemy_country and army.attitude == 'normal':
+                                province_war_siege_knights += army.knights
+                                self.war_siege = war
+                                self.siege = 1
+        else:
+            self.war_siege = None
+            self.siege = 0
+
+        if self.land.is_walkable():
+            war = self.war_siege
+            if war:
+                dice = int(((random.randrange(10) + 1)**2) / 4)
+                if dice >= self.morale:
+                    self.controller = war.get_enemies(self.controller)[0]
+                    self.war_siege = None
+                    self.siege = 0
+                    self.morale = 100
+                else:
+                    self.morale -= int(dice)
+            else:
+                if self.morale < 100:
+                    if self.morale < 90:
+                        self.morale += 10
+                    else:
+                        self.morale = 100
+
+        self.save()

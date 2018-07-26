@@ -140,4 +140,3 @@ class Army(Document):
                 self.morale = 100
         
         self.save()
-

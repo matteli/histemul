@@ -148,4 +148,3 @@ class Battle(Document):
                         army.save()
 
             self.determine_winner(armies)
-

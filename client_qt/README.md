@@ -27,5 +27,13 @@ make clean
 
 For the moment, there isn't make install command.
 
+For launching on Ubuntu 18.04, you need :
+* libqt5core5a
+* libqt5gui5
+* libqt5network5
+* libqt5qml5
+* libqt5quick5
+* libqt5widgets5
+* fonts-linuxlibertine
 
 
